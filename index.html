@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Tienda | Ecommerce</title>
+</head>
+<body>
+  <header>
+    <p>Mi Tienda</p>
+    <nav aria-label="Navegación principal">
+      <ul>
+        <li><a href="#">Inicio</a></li>
+        <li><a href="#">Productos</a></li>
+        <li><a href="#">Ofertas</a></li>
+        <li><a href="#">Contacto</a></li>
+      </ul>
+      <form action="#" method="get" role="search">
+        <label for="busqueda">Buscar productos</label>
+        <input type="search" id="busqueda" name="q" placeholder="Buscar...">
+        <button type="submit">Buscar</button>
+      </form>
+    </nav>
+  </header>
+
+  <main>
+    <section aria-label="Productos destacados">
+      <h1>Productos destacados</h1>
+
+      <article>
+        <figure>
+          <img src="#" alt="Imagen del producto 1">
+          <figcaption>Producto 1</figcaption>
+        </figure>
+        <h2>Producto 1</h2>
+        <p>Descripción breve del producto 1.</p>
+        <p>Precio: $1000</p>
+        <button type="button">Agregar al carrito</button>
+      </article>
+
+      <article>
+        <figure>
+          <img src="#" alt="Imagen del producto 2">
+          <figcaption>Producto 2</figcaption>
+        </figure>
+        <h2>Producto 2</h2>
+        <p>Descripción breve del producto 2.</p>
+        <p>Precio: $2000</p>
+        <button type="button">Agregar al carrito</button>
+      </article>
+
+      <article>
+        <figure>
+          <img src="#" alt="Imagen del producto 3">
+          <figcaption>Producto 3</figcaption>
+        </figure>
+        <h2>Producto 3</h2>
+        <p>Descripción breve del producto 3.</p>
+        <p>Precio: $3000</p>
+        <button type="button">Agregar al carrito</button>
+      </article>
+    </section>
+
+    <aside aria-label="Filtros">
+      <h2>Filtros</h2>
+      <form action="#" method="get">
+        <fieldset>
+          <legend>Categoría</legend>
+          <label><input type="checkbox" name="categoria" value="ropa"> Ropa</label>
+          <label><input type="checkbox" name="categoria" value="accesorios"> Accesorios</label>
+          <label><input type="checkbox" name="categoria" value="hogar"> Hogar</label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Precio</legend>
+          <label for="precio-min">Precio mínimo</label>
+          <input type="number" id="precio-min" name="precio_min" min="0">
+          <label for="precio-max">Precio máximo</label>
+          <input type="number" id="precio-max" name="precio_max" min="0">
+        </fieldset>
+
+        <fieldset>
+          <legend>Ordenar por</legend>
+          <select name="orden">
+            <option value="relevancia">Relevancia</option>
+            <option value="precio-asc">Menor precio</option>
+            <option value="precio-desc">Mayor precio</option>
+          </select>
+        </fieldset>
+
+        <button type="submit">Aplicar filtros</button>
+      </form>
+    </aside>
+  </main>
+
+  <footer>
+    <section aria-label="Información de la tienda">
+      <h2>Mi Tienda</h2>
+      <p>Tienda online de ejemplo para la materia Aplicaciones Web Cliente.</p>
+    </section>
+
+    <section aria-label="Enlaces útiles">
+      <h2>Enlaces</h2>
+      <ul>
+        <li><a href="#">Preguntas frecuentes</a></li>
+        <li><a href="#">Envíos</a></li>
+        <li><a href="#">Cambios y devoluciones</a></li>
+        <li><a href="#">Términos y condiciones</a></li>
+      </ul>
+    </section>
+
+    <section aria-label="Contacto">
+      <h2>Contacto</h2>
+      <address>
+        <p>Email: <a href="mailto:contacto@mitienda.com">contacto@mitienda.com</a></p>
+        <p>Teléfono: <a href="tel:+541100000000">+54 11 0000-0000</a></p>
+      </address>
+    </section>
+
+    <p>© 2026 Mi Tienda. Todos los derechos reservados.</p>
+  </footer>
+</body>
+</html>
