@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrito de Compras | Mi Tienda</title>
+</head>
+<body>
+  <header>
+    <p>Mi Tienda</p>
+    <nav aria-label="Navegación principal">
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="index.html">Productos</a></li>
+        <li><a href="cart.html">Carrito</a></li>
+        <li><a href="contact.html">Contacto</a></li>
+      </ul>
+      <form action="#" method="get" role="search">
+        <label for="busqueda">Buscar productos</label>
+        <input type="search" id="busqueda" name="q" placeholder="Buscar...">
+        <button type="submit">Buscar</button>
+      </form>
+    </nav>
+  </header>
+
+  <main>
+    <section aria-label="Carrito de compras">
+      <h1>Carrito de compras</h1>
+
+      <table>
+        <caption>Resumen de productos seleccionados en el carrito</caption>
+        <thead>
+          <tr>
+            <th scope="col">Producto</th>
+            <th scope="col">Precio</th>
+            <th scope="col">Cantidad</th>
+            <th scope="col">Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Producto 1</td>
+            <td>$1000</td>
+            <td>1</td>
+            <td>$1000</td>
+          </tr>
+          <tr>
+            <td>Producto 2</td>
+            <td>$2000</td>
+            <td>2</td>
+            <td>$4000</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <th scope="row" colspan="3">Total</th>
+            <td>$5000</td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <div>
+        <button type="button">Vaciar carrito</button>
+        <button type="button">Iniciar compra</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <section aria-label="Información de la tienda">
+      <h2>Mi Tienda</h2>
+      <p>Tienda online de ejemplo para la materia Aplicaciones Web Cliente.</p>
+    </section>
+
+    <section aria-label="Enlaces útiles">
+      <h2>Enlaces</h2>
+      <ul>
+        <li><a href="#">Preguntas frecuentes</a></li>
+        <li><a href="#">Envíos</a></li>
+        <li><a href="#">Cambios y devoluciones</a></li>
+        <li><a href="#">Términos y condiciones</a></li>
+      </ul>
+    </section>
+
+    <section aria-label="Contacto">
+      <h2>Contacto</h2>
+      <address>
+        <p>Email: <a href="mailto:contacto@mitienda.com">contacto@mitienda.com</a></p>
+        <p>Teléfono: <a href="tel:+541100000000">+54 11 0000-0000</a></p>
+      </address>
+    </section>
+
+    <p>© 2026 Mi Tienda. Todos los derechos reservados.</p>
+  </footer>
+</body>
+</html>

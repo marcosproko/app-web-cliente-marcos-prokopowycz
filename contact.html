@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contacto | Mi Tienda</title>
+</head>
+<body>
+  <header>
+    <p>Mi Tienda</p>
+    <nav aria-label="Navegación principal">
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="index.html">Productos</a></li>
+        <li><a href="cart.html">Carrito</a></li>
+        <li><a href="contact.html">Contacto</a></li>
+      </ul>
+      <form action="#" method="get" role="search">
+        <label for="busqueda">Buscar productos</label>
+        <input type="search" id="busqueda" name="q" placeholder="Buscar...">
+        <button type="submit">Buscar</button>
+      </form>
+    </nav>
+  </header>
+
+  <main>
+    <section aria-label="Contacto">
+      <h1>Contacto</h1>
+      <p>Envianos tu consulta completando el siguiente formulario:</p>
+
+      <form action="#" method="post">
+        <div>
+          <label for="nombre">Nombre</label>
+          <input type="text" id="nombre" name="nombre" required>
+        </div>
+
+        <div>
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+
+        <div>
+          <label for="asunto">Asunto</label>
+          <input type="text" id="asunto" name="asunto" required>
+        </div>
+
+        <div>
+          <label for="mensaje">Mensaje</label>
+          <textarea id="mensaje" name="mensaje" rows="5" required></textarea>
+        </div>
+
+        <button type="submit">Enviar mensaje</button>
+      </form>
+    </section>
+
+    <section aria-label="Ubicación de la tienda">
+      <h2>Ubicación</h2>
+      <iframe
+        title="Ubicación de la tienda en Google Maps"
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3284.016887889549!2d-58.381570!3d-34.603738!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzTCsDM2JzEzLjQiUyA1OMKwMjInNTMuNyJX!5e0!3m2!1ses!2sar!4v1600000000000!5m2!1ses!2sar"
+        width="600"
+        height="450"
+        loading="lazy">
+      </iframe>
+    </section>
+  </main>
+
+  <footer>
+    <section aria-label="Información de la tienda">
+      <h2>Mi Tienda</h2>
+      <p>Tienda online de ejemplo para la materia Aplicaciones Web Cliente.</p>
+    </section>
+
+    <section aria-label="Enlaces útiles">
+      <h2>Enlaces</h2>
+      <ul>
+        <li><a href="#">Preguntas frecuentes</a></li>
+        <li><a href="#">Envíos</a></li>
+        <li><a href="#">Cambios y devoluciones</a></li>
+        <li><a href="#">Términos y condiciones</a></li>
+      </ul>
+    </section>
+
+    <section aria-label="Contacto">
+      <h2>Contacto</h2>
+      <address>
+        <p>Email: <a href="mailto:contacto@mitienda.com">contacto@mitienda.com</a></p>
+        <p>Teléfono: <a href="tel:+541100000000">+54 11 0000-0000</a></p>
+      </address>
+    </section>
+
+    <p>© 2026 Mi Tienda. Todos los derechos reservados.</p>
+  </footer>
+</body>
+</html>
