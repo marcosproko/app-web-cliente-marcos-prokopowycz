@@ -4,10 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mi Tienda | Ecommerce</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
   <header>
-    <p>Mi Tienda</p>
+    <h1>Mi Tienda</h1>
     <nav aria-label="Navegación principal">
       <ul>
         <li><a href="index.html">Inicio</a></li>
@@ -15,52 +17,18 @@
         <li><a href="cart.html">Carrito</a></li>
         <li><a href="contact.html">Contacto</a></li>
       </ul>
-      <form action="#" method="get" role="search">
-        <label for="busqueda">Buscar productos</label>
-        <input type="search" id="busqueda" name="q" placeholder="Buscar...">
-        <button type="submit">Buscar</button>
-      </form>
     </nav>
   </header>
 
+  <section class="hero">
+    <div>
+      <h2>Descubre nuestro catálogo de hardware</h2>
+      <p>Los mejores productos con tecnología de última generación</p>
+      <a href="#catalogo" class="btn-primary">Ver catálogo</a>
+    </div>
+  </section>
+
   <main>
-    <section aria-label="Productos destacados" id="catalogo">
-      <h1>Productos destacados</h1>
-
-      <article>
-        <figure>
-          <a href="detalle-producto.html"><img src="#" alt="Imagen de Notebook Gamer i7"></a>
-          <figcaption>Notebook Gamer i7</figcaption>
-        </figure>
-        <h2><a href="detalle-producto.html">Notebook Gamer i7</a></h2>
-        <p>Descripción breve de la Notebook Gamer i7.</p>
-        <p>Precio: $1000</p>
-        <button type="button">Agregar al carrito</button>
-      </article>
-
-      <article>
-        <figure>
-          <a href="detalle-producto.html"><img src="#" alt="Imagen de Placa de Video RTX 4070"></a>
-          <figcaption>Placa de Video RTX 4070</figcaption>
-        </figure>
-        <h2><a href="detalle-producto.html">Placa de Video RTX 4070</a></h2>
-        <p>Descripción breve de la Placa de Video RTX 4070.</p>
-        <p>Precio: $2000</p>
-        <button type="button">Agregar al carrito</button>
-      </article>
-
-      <article>
-        <figure>
-          <a href="detalle-producto.html"><img src="#" alt="Imagen de Procesador Ryzen 7"></a>
-          <figcaption>Procesador Ryzen 7</figcaption>
-        </figure>
-        <h2><a href="detalle-producto.html">Procesador Ryzen 7</a></h2>
-        <p>Descripción breve del Procesador Ryzen 7.</p>
-        <p>Precio: $3000</p>
-        <button type="button">Agregar al carrito</button>
-      </article>
-    </section>
-
     <aside aria-label="Filtros">
       <h2>Filtros</h2>
       <form action="#" method="get">
@@ -92,6 +60,43 @@
         <button type="submit">Aplicar filtros</button>
       </form>
     </aside>
+
+    <section aria-label="Catálogo de hardware" id="catalogo">
+      <h1>Productos destacados</h1>
+
+      <article>
+        <figure>
+          <a href="detalle-producto.html"><img src="#" alt="Notebook Gamer i7"></a>
+          <figcaption>Notebook Gamer i7</figcaption>
+        </figure>
+        <h2><a href="detalle-producto.html">Notebook Gamer i7</a></h2>
+        <p>Descripción breve de la Notebook Gamer i7.</p>
+        <p>Precio: $1000</p>
+        <button type="button">Agregar al carrito</button>
+      </article>
+
+      <article>
+        <figure>
+          <a href="detalle-producto.html"><img src="#" alt="Placa de Video RTX 4070"></a>
+          <figcaption>Placa de Video RTX 4070</figcaption>
+        </figure>
+        <h2><a href="detalle-producto.html">Placa de Video RTX 4070</a></h2>
+        <p>Descripción breve de la Placa de Video RTX 4070.</p>
+        <p>Precio: $2000</p>
+        <button type="button">Agregar al carrito</button>
+      </article>
+
+      <article>
+        <figure>
+          <a href="detalle-producto.html"><img src="#" alt="Procesador Ryzen 7"></a>
+          <figcaption>Procesador Ryzen 7</figcaption>
+        </figure>
+        <h2><a href="detalle-producto.html">Procesador Ryzen 7</a></h2>
+        <p>Descripción breve del Procesador Ryzen 7.</p>
+        <p>Precio: $3000</p>
+        <button type="button">Agregar al carrito</button>
+      </article>
+    </section>
   </main>
 
   <footer>
@@ -121,5 +126,6 @@
 
     <p>© 2026 Mi Tienda. Todos los derechos reservados.</p>
   </footer>
+
 </body>
 </html>
