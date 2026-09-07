@@ -3,123 +3,78 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mi Tienda | Ecommerce</title>
+  <title>Mi Tienda | Hardware</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
   <header>
-    <p>Mi Tienda</p>
+    <a href="index.html" class="logo">Mi Tienda</a>
     <nav aria-label="Navegación principal">
       <ul>
         <li><a href="index.html">Inicio</a></li>
-        <li><a href="#catalogo">Productos</a></li>
+        <li><a href="index.html">Catálogo</a></li>
         <li><a href="cart.html">Carrito</a></li>
         <li><a href="contact.html">Contacto</a></li>
       </ul>
-      <form action="#" method="get" role="search">
-        <label for="busqueda">Buscar productos</label>
-        <input type="search" id="busqueda" name="q" placeholder="Buscar...">
-        <button type="submit">Buscar</button>
-      </form>
     </nav>
   </header>
 
   <main>
-    <section aria-label="Productos destacados" id="catalogo">
-      <h1>Productos destacados</h1>
-
-      <article>
-        <figure>
-          <a href="detalle-producto.html"><img src="#" alt="Imagen de Notebook Gamer i7"></a>
-          <figcaption>Notebook Gamer i7</figcaption>
-        </figure>
-        <h2><a href="detalle-producto.html">Notebook Gamer i7</a></h2>
-        <p>Descripción breve de la Notebook Gamer i7.</p>
-        <p>Precio: $1000</p>
-        <button type="button">Agregar al carrito</button>
-      </article>
-
-      <article>
-        <figure>
-          <a href="detalle-producto.html"><img src="#" alt="Imagen de Placa de Video RTX 4070"></a>
-          <figcaption>Placa de Video RTX 4070</figcaption>
-        </figure>
-        <h2><a href="detalle-producto.html">Placa de Video RTX 4070</a></h2>
-        <p>Descripción breve de la Placa de Video RTX 4070.</p>
-        <p>Precio: $2000</p>
-        <button type="button">Agregar al carrito</button>
-      </article>
-
-      <article>
-        <figure>
-          <a href="detalle-producto.html"><img src="#" alt="Imagen de Procesador Ryzen 7"></a>
-          <figcaption>Procesador Ryzen 7</figcaption>
-        </figure>
-        <h2><a href="detalle-producto.html">Procesador Ryzen 7</a></h2>
-        <p>Descripción breve del Procesador Ryzen 7.</p>
-        <p>Precio: $3000</p>
-        <button type="button">Agregar al carrito</button>
-      </article>
-    </section>
-
-    <aside aria-label="Filtros">
-      <h2>Filtros</h2>
-      <form action="#" method="get">
-        <fieldset>
-          <legend>Categoría</legend>
-          <label><input type="checkbox" name="categoria" value="procesadores"> Procesadores</label>
-          <label><input type="checkbox" name="categoria" value="placas-de-video"> Placas de video</label>
-          <label><input type="checkbox" name="categoria" value="memorias-ram"> Memorias RAM</label>
-          <label><input type="checkbox" name="categoria" value="almacenamiento"> Almacenamiento</label>
-        </fieldset>
-
-        <fieldset>
-          <legend>Precio</legend>
-          <label for="precio-min">Precio mínimo</label>
-          <input type="number" id="precio-min" name="precio_min" min="0">
-          <label for="precio-max">Precio máximo</label>
-          <input type="number" id="precio-max" name="precio_max" min="0">
-        </fieldset>
-
-        <fieldset>
-          <legend>Ordenar por</legend>
-          <select name="orden">
-            <option value="relevancia">Relevancia</option>
-            <option value="precio-asc">Menor precio</option>
-            <option value="precio-desc">Mayor precio</option>
-          </select>
-        </fieldset>
-
-        <button type="submit">Aplicar filtros</button>
-      </form>
+    <aside aria-label="Filtros de productos">
+      <h2>Categorías</h2>
+      <ul class="filtros-lista">
+        <li><a href="#">Todos los productos</a></li>
+        <li><a href="#">Notebooks</a></li>
+        <li><a href="#">Placas de video</a></li>
+        <li><a href="#">Procesadores</a></li>
+        <li><a href="#">Memorias RAM</a></li>
+      </ul>
     </aside>
+
+    <section aria-label="Catálogo">
+      <h1>Catálogo de hardware</h1>
+      
+      <div class="grid-catalogo">
+        <article class="card">
+          <figure>
+            <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=300&q=80" alt="Notebook Gamer i7" loading="lazy">
+          </figure>
+          <span class="tag-categoria">Notebook</span>
+          <h2>Notebook Gamer i7</h2>
+          <p>Potencia gráfica y rendimiento multitarea con pantalla 144Hz.</p>
+          <p class="precio">$1.199.000</p>
+          <a href="detalle-producto.html" class="btn-detalle">Ver detalle →</a>
+        </article>
+
+        <article class="card">
+          <figure>
+            <img src="https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=300&q=80" alt="Placa de Video RTX 4070" loading="lazy">
+          </figure>
+          <span class="tag-categoria">GPU</span>
+          <h2>Placa de Video RTX 4070</h2>
+          <p>Gráficos de nueva generación con arquitectura Ada Lovelace.</p>
+          <p class="precio">$1.599.000</p>
+          <a href="detalle-producto.html" class="btn-detalle">Ver detalle →</a>
+        </article>
+
+        <article class="card">
+          <figure>
+            <img src="https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=300&q=80" alt="Procesador Ryzen 7" loading="lazy">
+          </figure>
+          <span class="tag-categoria">CPU</span>
+          <h2>Procesador Ryzen 7</h2>
+          <p>8 núcleos y 16 hilos optimizados para cargas de trabajo pesadas.</p>
+          <p class="precio">$549.000</p>
+          <a href="detalle-producto.html" class="btn-detalle">Ver detalle →</a>
+        </article>
+      </div>
+    </section>
   </main>
 
   <footer>
-    <section aria-label="Información de la tienda">
-      <h2>Mi Tienda</h2>
-      <p></p>
-    </section>
-
-    <section aria-label="Enlaces útiles">
-      <h2>Enlaces</h2>
-      <ul>
-        <li><a href="contact.html">Contacto</a></li>
-        <li><a href="#">Preguntas frecuentes</a></li>
-        <li><a href="#">Envíos</a></li>
-        <li><a href="#">Cambios y devoluciones</a></li>
-        <li><a href="#">Términos y condiciones</a></li>
-      </ul>
-    </section>
-
-    <section aria-label="Contacto">
-      <h2><a href="contact.html">Contacto</a></h2>
-      <address>
-        <p>Email: <a href="mailto:contacto@mitienda.com">contacto@mitienda.com</a></p>
-        <p>Teléfono: <a href="tel:+541100000000">+54 11 0000-0000</a></p>
-      </address>
-    </section>
-
     <p>© 2026 Mi Tienda. Todos los derechos reservados.</p>
   </footer>
+
 </body>
 </html>
