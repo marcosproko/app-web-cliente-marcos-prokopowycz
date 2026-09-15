@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es"> 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,74 +7,147 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <header class="header-centrado">
+  <h1 class="marca-titulo">WOL</h1>
 
-  <header>
-    <a href="index.html" class="logo">Mi Tienda</a>
-    <nav aria-label="Navegación principal">
-      <ul>
-        <li><a href="index.html">Inicio</a></li>
-        <li><a href="index.html">Catálogo</a></li>
-        <li><a href="cart.html">Carrito</a></li>
-        <li><a href="contact.html">Contacto</a></li>
-      </ul>
-    </nav>
-  </header>
+  <nav aria-label="Navegación principal">
+    <ul class="nav-centrado">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="catalogo.html">Catálogo</a></li>
+      <li><a href="carrito.html">Carrito</a></li>
+      <li><a href="contact.html">Contacto</a></li>
+    </ul>
+  </nav>
 
-  <main>
-    <aside aria-label="Filtros de productos">
-      <h2>Categorías</h2>
-      <ul class="filtros-lista">
-        <li><a href="#">Todos los productos</a></li>
-        <li><a href="#">Notebooks</a></li>
-        <li><a href="#">Placas de video</a></li>
-        <li><a href="#">Procesadores</a></li>
-        <li><a href="#">Memorias RAM</a></li>
-      </ul>
-    </aside>
-
+  <form role="search" class="search-centrado">
+    <input type="search" placeholder="Búsqueda de productos..." aria-label="Buscar producto">
+    <button type="submit">Buscar</button>
+  </form>
+</header>
+<main>
+  <section aria-label="Bienvenido">
+    <h2>Bienvenido a WOL</h2>
+    <p>Encuentra los mejores productos de hardware para tu PC.</p>
+  </section>
     <section aria-label="Catálogo">
-      <h1>Catálogo de hardware</h1>
-      
       <div class="grid-catalogo">
         <article class="card">
+          
           <figure>
-            <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=300&q=80" alt="Notebook Gamer i7" loading="lazy">
-          </figure>
-          <span class="tag-categoria">Notebook</span>
-          <h2>Notebook Gamer i7</h2>
-          <p>Potencia gráfica y rendimiento multitarea con pantalla 144Hz.</p>
-          <p class="precio">$1.199.000</p>
-          <a href="detalle-producto.html" class="btn-detalle">Ver detalle →</a>
-        </article>
-
-        <article class="card">
-          <figure>
-            <img src="https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=300&q=80" alt="Placa de Video RTX 4070" loading="lazy">
+            <img src="assets/img/4070.jpg" alt="Placa de video ASUS RTX 4070" loading="lazy">
           </figure>
           <span class="tag-categoria">GPU</span>
-          <h2>Placa de Video RTX 4070</h2>
-          <p>Gráficos de nueva generación con arquitectura Ada Lovelace.</p>
+          <h3>Placa de video ASUS RTX 4070</h3>
+          <p>Rendimiento gráfico de última generación con 12 GB GDDR6X y soporte DLSS 3 para máxima fluidez en resolución 1440p y 4K.</p>
           <p class="precio">$1.599.000</p>
           <a href="detalle-producto.html" class="btn-detalle">Ver detalle →</a>
+          <a href="carrito.html" class="btn-comprar">Agregar al carrito 🛒</a>
         </article>
 
         <article class="card">
           <figure>
-            <img src="https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=300&q=80" alt="Procesador Ryzen 7" loading="lazy">
+            <img src="assets/img/i9.jpg" alt="Procesador Intel i9" loading="lazy">
           </figure>
-          <span class="tag-categoria">CPU</span>
-          <h2>Procesador Ryzen 7</h2>
-          <p>8 núcleos y 16 hilos optimizados para cargas de trabajo pesadas.</p>
+          <span class="tag-categoria">PROCESADOR</span>
+          <h3>Procesador Intel i9</h3>
+          <p>10 núcleos y 20 hilos optimizados para cargas de trabajo pesadas.</p>
+          <p class="precio">$1.199.000</p>
+          <a href="detalle-producto.html" class="btn-detalle">Ver detalle →</a>
+          <a href="carrito.html" class="btn-comprar">Agregar al carrito 🛒</a>
+        </article>
+
+        <article class="card">
+          <figure>
+            <img src="assets/img/Memoria_Corsair_DDR5_64GB__2x32GB__6000MHz_Vengeance_XMP_3.0_RGB_96e9a386-grn.jpg" alt="Memoria RAM Corsair DDR5" loading="lazy">
+          </figure>
+          <span class="tag-categoria">MEMORIA</span>
+          <h3>Memoria RAM Corsair DDR5</h3>
+          <p>64 GB de memoria RAM DDR5 6000 MHz.</p>
           <p class="precio">$549.000</p>
           <a href="detalle-producto.html" class="btn-detalle">Ver detalle →</a>
+          <a href="carrito.html" class="btn-comprar">Agregar al carrito 🛒</a>
+        </article>
+
+        <article class="card">
+          <figure>
+            <img src="assets/img/gabinete.jpg" alt="Gabinete" loading="lazy">
+          </figure>
+          <span class ="tag-categoria">GABINETE</span>
+          <h3>Gabinete</h3>
+          <p>Diseño moderno con ventilación eficiente y espacio para componentes de alto rendimiento.</p>
+          <p class="precio">$199.000</p>
+          <a href="detalle-producto.html" class="btn-detalle">Ver detalle →</a>
+          <a href="carrito.html" class="btn-comprar">Agregar al carrito 🛒</a>
+        </article>
+
+        <article class="card">
+          <figure>
+            <img src="assets/img/Teclado_Mecanico_Corsair_K65_PLUS_75__Wireless_2.4Ghz_Bluetooth_1ms_Switch_MLX_Red_Glacial_Blue_RGB_266Hs_a08bc7e4-grn.jpg" alt="Teclado Mecánico Corsair K65 PLUS" loading="lazy">
+          </figure>
+          <span class ="tag-categoria">TECLADO</span>
+          <h3>Teclado Mecánico Corsair K65 PLUS</h3>
+          <p>Teclado mecánico con interruptores de alta calidad y retroiluminación RGB.</p>
+          <p class="precio">$79.000</p>
+          <a href="detalle-producto.html" class="btn-detalle">Ver detalle →</a>
+          <a href="carrito.html" class="btn-comprar">Agregar al carrito 🛒</a>
+        </article>
+
+        <article class="card">
+          <figure>
+            <img src="assets/img/beastpro.jpg" alt="Mouse Gamer Beast Pro" loading="lazy">
+          </figure>
+          <span class ="tag-categoria">MOUSE</span>
+          <h3>Mouse Gamer Beast Pro</h3>
+          <p>Mouse gaming con sensor óptico de alta precisión y diseño ergonómico.</p>
+          <p class="precio">$49.000</p>
+          <a href="detalle-producto.html" class="btn-detalle">Ver detalle →</a>
+          <a href="carrito.html" class="btn-comprar">Agregar al carrito 🛒</a>
+        </article>
+
+        <article class="card">
+          <figure>
+            <img src="assets/img/Cooler_CPU_ASUS_ROG_RYUJIN_III_360_ARGB_EXTREME_cc784055-grn.jpg" alt="Cooler CPU ASUS ROG RYUJIN III 360 ARGB EXTREME" loading="lazy">
+          </figure>
+          <span class ="tag-categoria">COOLER</span>
+          <h3>Cooler CPU ASUS ROG III 360 ARGB EXTREME</h3>
+          <p>Cooler de agua con sistema de enfriamiento de 360 mm y iluminación RGB.</p>
+          <p class="precio">$199.000</p>
+          <a href="detalle-producto.html" class="btn-detalle">Ver detalle →</a>
+          <a href="carrito.html" class="btn-comprar">Agregar al carrito 🛒</a>
+        </article>
+
+        <article class="card">
+          <figure>
+            <img src="assets/img/monitor27.jpg" alt="Monitor 27 pulgadas" loading="lazy">
+          </figure>
+          <span class ="tag-categoria">MONITOR</span>
+          <h3>Monitor 27 pulgadas</h3>
+          <p> Pantalla Full HD con tasa de refresco de 144 Hz.</p>
+          <p class="precio">$299.000</p>
+          <a href="detalle-producto.html" class="btn-detalle">Ver detalle →</a>
+          <a href="carrito.html" class="btn-comprar">Agregar al carrito 🛒</a>
+        </article>
+
+        <article class="card">
+          <figure>
+            <img src="assets/img/Auriculares.jpg" alt="Auriculares Gamer" loading="lazy">
+          </figure>
+          <span class ="tag-categoria">AURICULAR</span>
+          <h3>Auriculares Gamer</h3>
+          <p>Calidad de sonido profesional con cancelación de ruido.</p>
+          <p class="precio">$79.000</p>
+          <a href="detalle-producto.html" class="btn-detalle">Ver detalle →</a>
+          <a href="carrito.html" class="btn-comprar">Agregar al carrito 🛒</a>
         </article>
       </div>
     </section>
-  </main>
-
+</main>
   <footer>
-    <p>© 2026 Mi Tienda. Todos los derechos reservados.</p>
+  <div class="footer-links">
+    <a href="contacto.html">Contacto</a>
+    <a href="#">Preguntas frecuentes</a>
+    <a href="#">Envíos</a>
+    <a href="#">Términos y condiciones</a>
+  </div>
+  <p>© 2026 Mi Tienda. Todos los derechos reservados.</p>
   </footer>
-
-</body>
-</html>
