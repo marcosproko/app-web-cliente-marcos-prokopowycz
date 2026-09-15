@@ -5,8 +5,8 @@
   --color-tarjeta-borde: #24262e; 
   --color-texto: #fffffe;         
   --color-muted: #94a1b2;         
-  --color-primario: #00ebc7;      
-  --color-primario-hover: #00c4a7;
+  --color-primario: #d40606;      
+  --color-primario-hover: #b30505;
   --color-acento: #7f5af0;        
   --radio-borde: 12px;
   --sombra-card: 0 8px 24px rgba(0, 0, 0, 0.5);
@@ -116,7 +116,7 @@ max-width: 1200px;
 
 .nav-centrado a {
   text-decoration: none;
-  color: #a0aec0; /* Gris claro legible */
+  color: #a0aec0; 
   font-size: 1rem;
   font-weight: 500;
   transition: color 0.2s ease;
@@ -138,7 +138,7 @@ max-width: 1200px;
   outline: none;
 }
 .search-centrado button {
-  background-color: #00ebc7;
+  background-color: #eb2300;
   color: #0a0a0c;
   border: none;
   font-weight: 700;
@@ -252,10 +252,10 @@ main section h2 {
 
 
 .card figure img {
-  width: 250px;
+  width: 320px;
   height: 180px;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 20px;
   display: block;
 }
 
