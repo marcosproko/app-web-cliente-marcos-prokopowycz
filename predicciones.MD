@@ -3,3 +3,5 @@ predicciones :
 2. Quiero crear la página incluirá especificaciones técnicas de la computadora (CPU, RAM, GPU), selector de cantidad y botón de agregar al carrito con HTML semántico
 3. Quiero crear las paginas de carrito y contacto 
 4. Maquetar con los estilos principales header, catalogo, nav y footer 
+5. Ajustes de estilos globales, corrección de selectores en style.css y normalización de estructura en las vistas secundarias.
+6. 
