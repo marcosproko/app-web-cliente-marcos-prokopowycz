@@ -3,60 +3,74 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Carrito de Compras | Mi Tienda</title>
+  <title>Carrito de Compras | WOL Hardware</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <p>WOL</p>
+  <header class="header-centrado">
+    <h1 class="marca-titulo">WOL</h1>
     <nav aria-label="Navegación principal">
-      <ul>
+      <ul class="nav-centrado">
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="Catalogo.html">Catálogo</a></li>
+        <li><a href="carrito.html">Carrito</a></li>
+        <li><a href="contact.html">Contacto</a></li>
       </ul>
-      <form action="#" method="get" role="search">
-        <label for="busqueda">Buscar productos</label>
-        <input type="search" id="busqueda" name="q" placeholder="Buscar...">
-        <button type="submit">Buscar</button>
-      </form>
     </nav>
   </header>
 
   <main>
-    <section aria-label="Carrito de compras">
-      <h1>Carrito de compras</h1>
+    <section aria-label="Carrito de compras" class="contenedor-carrito">
+      <h2>🛒 Carrito de Compras</h2>
 
-      <table>
-        <caption>Resumen de productos seleccionados en el carrito</caption>
+      <table class="tabla-carrito">
+        <caption>Resumen de los productos seleccionados para la compra</caption>
         <thead>
           <tr>
             <th scope="col">Producto</th>
-            <th scope="col">Precio</th>
+            <th scope="col">Precio unitario</th>
             <th scope="col">Cantidad</th>
             <th scope="col">Subtotal</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>Producto 1</td>
-            <td>$1000</td>
+            <td>Placa de video ASUS RTX 4070</td>
+            <td>$1.599.000</td>
             <td>1</td>
-            <td>$1000</td>
+            <td>$1.599.000</td>
           </tr>
           <tr>
-            <td>Producto 2</td>
-            <td>$2000</td>
+            <td>Memoria RAM Corsair DDR5</td>
+            <td>$549.000</td>
             <td>2</td>
-            <td>$4000</td>
+            <td>$1.098.000</td>
           </tr>
         </tbody>
         <tfoot>
           <tr>
-            <th scope="row" colspan="3">Total</th>
-            <td>$5000</td>
+            <th scope="row" colspan="3">Total final estimado:</th>
+            <td class="total-monto">$2.697.000</td>
           </tr>
         </tfoot>
       </table>
-      <div>
-        <button type="button">Vaciar carrito</button>
-        <button type="button">Iniciar compra</button>
+
+      <div class="carrito-acciones">
+        <button type="button" class="btn-vaciar">Vaciar carrito</button>
+        <button type="button" class="btn-comprar">Iniciar compra final →</button>
       </div>
     </section>
   </main>
+
+  <footer>
+    <div class="footer-links">
+      <a href="contact.html">Contacto</a>
+      <a href="contact.html#faq">Preguntas frecuentes</a>
+      <a href="contact.html#envios">Envíos</a>
+      <a href="contact.html#terminos">Términos y condiciones</a>
+    </div>
+    <p>© 2026 WOL Hardware. Todos los derechos reservados.</p>
+  </footer>
+</body>
+</html>
+ 

@@ -3,58 +3,73 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Notebook Gamer i7 | Mi Tienda</title>
+  <title>Placa de video ASUS RTX 4070 | WOL Hardware</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main>
-    <article>
-      <h1>Placa de video ASUS RTX 4070</h1>
+  <!-- Encabezado con navegación consistente -->
+  <header class="header-centrado">
+    <h1 class="marca-titulo">WOL</h1>
+    <nav aria-label="Navegación principal">
+      <ul class="nav-centrado">
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="Catalogo.html">Catálogo</a></li>
+        <li><a href="carrito.html">Carrito</a></li>
+        <li><a href="contact.html">Contacto</a></li>
+      </ul>
+    </nav>
+  </header>
 
+  <main>
+    <article class="card" style="max-width: 800px; margin: 0 auto;">
+      <h1>Placa de video ASUS RTX 4070</h1>
       <figure>
-        <img src="assets/img/4070.jpg" alt="Placa de video ASUS RTX 4070" width="400" height="300">
+        <img src="assets/img/4070.jpg" alt="Placa de video ASUS RTX 4070" loading="lazy">
         <figcaption>Imagen principal de la Placa de video ASUS RTX 4070</figcaption>
       </figure>
+
       <section aria-label="Información general del producto">
         <h2>Descripción</h2>
         <p>Rendimiento gráfico de última generación con 12 GB GDDR6X y soporte DLSS 3 para máxima fluidez en resolución 1440p y 4K.</p>
-        <p>Precio: $1.599.000</p>
-        <button type="button">Agregar al carrito</button>
-        
+        <p class="precio">$1.599.000</p>
+        <a href="carrito.html" class="btn-comprar">Agregar al carrito 🛒</a>
       </section>
 
-      <section aria-label="Ficha técnica del producto">
+      <section aria-label="Ficha técnica del producto" style="margin-top: 2rem;">
         <h2>Ficha técnica</h2>
-        <table>
-          <caption>Especificaciones técnicas del Gabinete</caption>
+        <table class="tabla-carrito">
+          <caption>Especificaciones técnicas de la Placa de video ASUS RTX 4070</caption>
           <tbody>
             <tr>
-              <th scope="row">Procesador</th>
-              <td>Intel Core i7-13650HX (14 núcleos, hasta 4.9 GHz)</td>
+              <th scope="row">Memoria</th>
+              <td>12 GB GDDR6X</td>
             </tr>
             <tr>
-              <th scope="row">Memoria RAM</th>
-              <td>16 GB DDR5 4800 MHz (ampliable a 32 GB)</td>
+              <th scope="row">Tecnologías</th>
+              <td>DLSS 3, Ray Tracing núcleos de 3ra gen</td>
             </tr>
             <tr>
-              <th scope="row">Almacenamiento</th>
-              <td>SSD NVMe de 512 GB PCIe Gen 4</td>
-            </tr>
-            <tr>
-              <th scope="row">Placa de video</th>
-              <td>NVIDIA GeForce RTX 4060 de 8 GB GDDR6</td>
-            </tr>
-            <tr>
-              <th scope="row">Pantalla</th>
-              <td>15.6" Full HD (1920x1080), 144 Hz, IPS</td>
-            </tr>
-            <tr>
-              <th scope="row">Sistema operativo</th>
-              <td>Windows 11 Home</td>
+              <th scope="row">Garantía</th>
+              <td>36 meses oficial</td>
             </tr>
           </tbody>
         </table>
       </section>
-      <section aria-label="Enlaces relacionados">
-        <a href="index.html#catalogo">&larr; Volver al catálogo principal</a>
+
+      <section aria-label="Enlaces relacionados" style="margin-top: 1.5rem; text-align: center;">
+        <a href="index.html" class="btn-detalle">← Volver al inicio</a>
       </section>
     </article>
+  </main>
+
+  <footer>
+    <div class="footer-links">
+      <a href="contact.html">Contacto</a>
+      <a href="contact.html#faq">Preguntas frecuentes</a>
+      <a href="contact.html#envios">Envíos</a>
+      <a href="contact.html#terminos">Términos y condiciones</a>
+    </div>
+    <p>© 2026 WOL Hardware. Todos los derechos reservados.</p>
+  </footer>
+</body>
+</html>
