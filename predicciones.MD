@@ -25,3 +25,5 @@
 ## 9. Animaciones CSS y Adaptabilidad Responsive (Mejoras Parcial 1)
 -  Espero incorporar animaciones @keyframes (fadeInUp para cards y pulsoOferta para badges) y definir media queries explícitas (@media max-width: 768px y 480px) para reorganizar el menú, hacer fluido el buscador y permitir navegación táctil en los filtros móviles.
 
+## 10. Renderizado dinámico de productos desde JS
+- Predicción: Espero sacar los productos fijos del HTML, guardarlos en un array de objetos en un archivo JS e insertarlos dinámicamente en el contenedor al cargar la página.
