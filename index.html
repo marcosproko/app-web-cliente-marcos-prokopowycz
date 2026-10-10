@@ -36,17 +36,6 @@
         <p>Producto no disponible</p>
         <button id="btn-ver-todos" type="button">Ver todos los productos</button>
       </div>
-      <section aria-label="Ofertas semanales" class="seccion-bloque">
-        <div class="seccion-header">
-          <h2>Ofertas Semanales</h2>
-          <p>
-            Aprovechá descuentos exclusivos por tiempo limitado en componentes
-            seleccionados.
-          </p>
-        </div>
-
-        <div class="grid-catalogo" id="ofertas-grid"></div>
-      </section>
 
       <section
         aria-label="Explorar por categorías"
@@ -64,13 +53,32 @@
         </nav>
       </section>
 
-      <section aria-label="Nuevos ingresos" class="seccion-bloque">
+      <section aria-label="Ofertas semanales" class="seccion-bloque" id="seccion-ofertas">
+        <div class="seccion-header">
+          <h2>Ofertas Semanales</h2>
+          <p>
+            Aprovechá descuentos exclusivos por tiempo limitado en componentes
+            seleccionados.
+          </p>
+        </div>
+
+        <div class="grid-catalogo" id="ofertas-grid"></div>
+      </section>
+
+      <section aria-label="Nuevos ingresos" class="seccion-bloque" id="seccion-nuevos">
         <div class="seccion-header">
           <h2>Nuevos Ingresos</h2>
           <p>El equipamiento más reciente recién llegado a nuestro depósito.</p>
         </div>
 
         <div class="grid-catalogo" id="nuevos-grid"></div>
+      </section>
+
+      <section aria-label="Productos filtrados" class="seccion-bloque" id="seccion-filtrados" style="display: none;">
+        <div class="seccion-header">
+          <h2 id="titulo-filtrados"></h2>
+        </div>
+        <div class="grid-catalogo" id="filtrados-grid"></div>
       </section>
     </main>
     <script src="app.js"></script>
