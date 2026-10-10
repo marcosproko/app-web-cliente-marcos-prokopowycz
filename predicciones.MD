@@ -30,6 +30,7 @@
 
 ## 11. Buscador interactivo y estado no disponible
 - Predicción: Espero capturar el evento 'input' en el buscador para filtrar en tiempo real las tarjetas que coincidan con el término por nombre o descripción. Si no hay coincidencias, se ocultará el catálogo y se mostrará un mensaje de producto no disponible con opción de restablecer la lista.
+- mover el contenedor `#sin-resultados` arriba de las secciones principales y hacer que al no haber coincidencias se oculten las secciones del catálogo para que el mensaje aparezca centrado arriba, debajo del buscador.
 
 
 

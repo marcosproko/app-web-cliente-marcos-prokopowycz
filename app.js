@@ -137,4 +137,45 @@ function renderizarProductos(productos, contenedorId) {
 document.addEventListener('DOMContentLoaded', () => {
   renderizarProductos(productosOfertas, 'ofertas-grid');
   renderizarProductos(productosNuevos, 'nuevos-grid');
+
+  const buscador = document.getElementById('buscador-productos');
+  const ofertasGrid = document.getElementById('ofertas-grid');
+  const nuevosGrid = document.getElementById('nuevos-grid');
+  const sinResultados = document.getElementById('sin-resultados');
+  const btnVerTodos = document.getElementById('btn-ver-todos');
+  const seccionesMain = document.querySelectorAll('main > section');
+
+  function filtrarProductos(termino) {
+    const terminoLower = termino.toLowerCase().trim();
+    const ofertasFiltradas = productosOfertas.filter(p =>
+      p.nombre.toLowerCase().includes(terminoLower) || p.descripcion.toLowerCase().includes(terminoLower)
+    );
+    const nuevosFiltrados = productosNuevos.filter(p =>
+      p.nombre.toLowerCase().includes(terminoLower) || p.descripcion.toLowerCase().includes(terminoLower)
+    );
+
+    renderizarProductos(ofertasFiltradas, 'ofertas-grid');
+    renderizarProductos(nuevosFiltrados, 'nuevos-grid');
+
+    const hayResultados = ofertasFiltradas.length > 0 || nuevosFiltrados.length > 0;
+
+    seccionesMain.forEach(seccion => {
+      seccion.style.display = hayResultados ? '' : 'none';
+    });
+    sinResultados.hidden = hayResultados;
+  }
+
+  buscador.addEventListener('input', (e) => {
+    filtrarProductos(e.target.value);
+  });
+
+  btnVerTodos.addEventListener('click', () => {
+    buscador.value = '';
+    renderizarProductos(productosOfertas, 'ofertas-grid');
+    renderizarProductos(productosNuevos, 'nuevos-grid');
+    seccionesMain.forEach(seccion => {
+      seccion.style.display = '';
+    });
+    sinResultados.hidden = true;
+  });
 });
