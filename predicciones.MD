@@ -27,3 +27,9 @@
 
 ## 10. Renderizado dinámico de productos desde JS
 - Predicción: Espero sacar los productos fijos del HTML, guardarlos en un array de objetos en un archivo JS e insertarlos dinámicamente en el contenedor al cargar la página.
+
+## 11. Buscador interactivo y estado no disponible
+- Predicción: Espero capturar el evento 'input' en el buscador para filtrar en tiempo real las tarjetas que coincidan con el término por nombre o descripción. Si no hay coincidencias, se ocultará el catálogo y se mostrará un mensaje de producto no disponible con opción de restablecer la lista.
+
+
+
