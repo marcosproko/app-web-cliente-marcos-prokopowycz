@@ -146,13 +146,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const buscador = document.getElementById('buscador-productos');
   const sinResultados = document.getElementById('sin-resultados');
   const btnVerTodos = document.getElementById('btn-ver-todos');
-  const seccionCategorias = document.getElementById('seccion-categorias');
   const seccionOfertas = document.getElementById('seccion-ofertas');
   const seccionNuevos = document.getElementById('seccion-nuevos');
-  const seccionFiltrados = document.getElementById('seccion-filtrados');
-  const tituloFiltrados = document.getElementById('titulo-filtrados');
-  const chips = document.querySelectorAll('.chip');
-  let categoriaActiva = null;
 
   function mostrarTodosLosProductos() {
     renderizarProductos(productosOfertas, 'ofertas-grid');
@@ -160,12 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     seccionOfertas.style.display = productosOfertas.length > 0 ? '' : 'none';
     seccionNuevos.style.display = productosNuevos.length > 0 ? '' : 'none';
-    seccionFiltrados.style.display = 'none';
-    seccionCategorias.style.display = '';
     sinResultados.hidden = true;
-
-    categoriaActiva = null;
-    chips.forEach(c => c.classList.remove('activo'));
   }
 
   function filtrarProductos(termino) {
@@ -193,36 +183,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     seccionOfertas.style.display = hayOfertas ? '' : 'none';
     seccionNuevos.style.display = hayNuevos ? '' : 'none';
-    seccionFiltrados.style.display = 'none';
-    seccionCategorias.style.display = 'none';
     sinResultados.hidden = hayResultados;
-
-    categoriaActiva = null;
-    chips.forEach(c => c.classList.remove('activo'));
-  }
-
-  function filtrarPorCategoria(categoria) {
-    if (categoria) {
-      const filtrados = todosLosProductos.filter(p => p.categoria === categoria);
-
-      renderizarProductos(filtrados, 'filtrados-grid');
-      tituloFiltrados.textContent = `Resultados para: ${categoria}`;
-
-      seccionOfertas.style.display = 'none';
-      seccionNuevos.style.display = 'none';
-      seccionFiltrados.style.display = '';
-      seccionCategorias.style.display = '';
-      sinResultados.hidden = filtrados.length > 0;
-    } else {
-      mostrarTodosLosProductos();
-    }
   }
 
   function aplicarVistaSegunBusqueda() {
     if (buscador.value.trim() !== '') {
       filtrarProductos(buscador.value);
-    } else if (categoriaActiva) {
-      filtrarPorCategoria(categoriaActiva);
     } else {
       mostrarTodosLosProductos();
     }
@@ -235,34 +201,6 @@ document.addEventListener('DOMContentLoaded', () => {
   btnVerTodos.addEventListener('click', () => {
     buscador.value = '';
     mostrarTodosLosProductos();
-  });
-
-  chips.forEach(chip => {
-    chip.addEventListener('click', (e) => {
-      e.preventDefault();
-      const textoChip = chip.textContent.trim();
-      const mapaCategorias = {
-        'Placas de Video': 'PLACA DE VIDEO',
-        'Procesadores': 'PROCESADOR',
-        'Memorias RAM': 'MEMORIA',
-        'Gabinetes': 'GABINETE',
-        'Teclados y Mouse': 'TECLADO',
-        'Coolers': 'COOLER',
-        'Monitores': 'MONITOR'
-      };
-      const categoria = mapaCategorias[textoChip];
-
-      if (categoriaActiva === categoria) {
-        categoriaActiva = null;
-        chips.forEach(c => c.classList.remove('activo'));
-        mostrarTodosLosProductos();
-      } else {
-        categoriaActiva = categoria;
-        chips.forEach(c => c.classList.remove('activo'));
-        chip.classList.add('activo');
-        filtrarPorCategoria(categoria);
-      }
-    });
   });
 
   window.addEventListener('productos-cargados', aplicarVistaSegunBusqueda);

@@ -40,3 +40,8 @@
 
 ## 15. Refactorización del Buscador y Limpieza de UI en Inicio
 - Predicción: Espero modificar app.js para que el buscador filtre sobre la totalidad de los productos obtenidos de Supabase y no sobre listas locales. Además, implementaré control dinámico del DOM para ocultar secciones vacías ('Ofertas Semanales' o 'Nuevos Ingresos'), ocultar la botonera de categorías durante la búsqueda y mostrar el mensaje 'sin resultados' únicamente cuando no existan coincidencias en toda la tienda.
+
+## 16. Limpieza de Inicio y Catálogo Dinámico con Supabase
+- Predicción: Espero remover la sección redundante de 'Explorá por Categorías' en index.html para simplificar la vista principal. En Catalogo.html vincularé la llamada asíncrona a la API de Supabase para obtener la totalidad de los productos y renderizarlos en la grilla (.grid-inventario) con tarjetas compactas (.card-compacta). Asimismo, implementaré el filtrado real por categoría mediante el método filter() de JavaScript para que, al presionar un botón de categoría, la interfaz muestre exclusivamente los artículos pertenecientes a dicho rubro sin depender de anclas de scroll estáticas.
+
+
