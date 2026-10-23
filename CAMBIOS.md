@@ -1,67 +1,81 @@
-# Cambios en la pantalla de inicio
+# Cambios: limpieza del inicio, catálogo dinámico y filtros reales
 
-## Qué problemas había
+## 1. Qué saqué de `index.html`
 
-- El buscador solo miraba los productos que estaban escritos a mano en el archivo. Los productos que llegaban desde Supabase se mostraban en pantalla, pero el buscador no los tenía en cuenta.
-- Cuando una búsqueda no encontraba productos en una sección, igual quedaba el título "Ofertas Semanales" o "Nuevos Ingresos" sin ninguna tarjeta debajo.
-- El bloque de categorías seguía visible mientras se estaba buscando, aunque no tenía sentido mostrarlo en ese momento.
-- El cartel de "Producto no disponible" aparecía en situaciones en las que no correspondía.
+Eliminé toda la sección **"Explorá por Categorías"**, o sea el bloque con las pastillas o chips de categorías que estaba entre el buscador y las ofertas.
 
-## Archivos que toqué
+También borré el CSS que ya no se usaba para esas pastillas (`.chip`, `.categorias-chips` y `.seccion-categorias-banner`), así no queda código muerto.
 
-- `js/app.js`: está toda la lógica de la búsqueda y de mostrar u ocultar las secciones.
-- `index.html`: le agregué un identificador a la sección de categorías y una pequeña mejora para que el cartel de "sin resultados" pueda ser leído por lectores de pantalla.
-- `CAMBIOS.md`: este mismo archivo, para explicar lo que se hizo.
+En `js/app.js` saqué las referencias a esa sección y los listeners de los chips:
 
-## Qué hace cada cambio
+- ya no se busca `#seccion-categorias`;
+- ya no se seleccionan los `.chip`;
+- ya no existe la variable `categoriaActiva` para los chips del inicio;
+- ya no existe la función `filtrarPorCategoria` del inicio.
 
-### 1. Una sola lista con todos los productos
+Gracias a esa limpieza, el buscador, "Ofertas Semanales" y "Nuevos Ingresos" siguen funcionando normalmente y no se rompen por intentar acceder a elementos que ya no están en el HTML.
 
-Ahora hay una lista general llamada `todosLosProductos`. Al principio tiene los productos de ejemplo y, cuando terminan de llegar los productos de Supabase, se reemplaza con esa lista completa.
+## 2. Cómo quedó conectado `Catalogo.html` con Supabase
 
-El buscador ya no revisa dos listas separadas: revisa siempre esa lista general. De cada producto mira el **nombre** y la **descripción**. Si el texto buscado aparece en cualquiera de esos dos lugares, el producto se muestra.
+Creé un archivo nuevo, `js/catalogo.js`, y lo vinculé desde `Catalogo.html` con `defer`.
 
-Además, si la persona ya estaba escribiendo cuando terminan de cargar los productos de Supabase, la búsqueda se vuelve a aplicar automáticamente. Así no se pierde lo que había escrito.
+Ese script usa la misma URL y la misma clave anon (JWT) de Supabase que ya usaba el inicio. Hace un `fetch` asíncrono contra la API REST:
 
-### 2. Las secciones vacías desaparecen
+```js
+`${SUPABASE_URL}/rest/v1/Productos?select=*&order=id.asc`
+```
 
-Después de buscar, el programa separa los resultados en dos grupos: los que son ofertas y los que son nuevos ingresos.
+En los headers manda `apikey` y `Authorization: Bearer <clave anon>`. Cuando llega la respuesta, guarda los productos en un array y los dibuja uno por uno.
 
-- Si hay resultados en "Ofertas Semanales", esa sección se muestra.
-- Si no hay resultados en "Ofertas Semanales", se oculta la sección entera, con su título y todo.
-- Lo mismo pasa con "Nuevos Ingresos".
+Las tarjetas viejas que estaban escritas a mano dentro de `.grid-inventario` se borraron del HTML. Ahora ese contenedor arranca vacío y se llena solo con JavaScript. Cada producto se muestra con la estructura `.card-compacta`:
 
-Para ocultarlas se usa `style.display = 'none'`, que hace que la sección desaparezca de la pantalla. De esta forma nunca queda un título solo, sin tarjetas abajo.
+- imagen (`imagen`);
+- categoría (`categoria`);
+- nombre (`nombre`);
+- descripción (`descripcion`);
+- precio formateado en pesos argentinos con `Intl.NumberFormat('es-AR', { currency: 'ARS' })`;
+- botones de "Detalle" y "Agregar".
 
-### 3. Las categorías se ocultan mientras se busca
+Además, los textos que vienen de la base se escapan antes de insertarlos en el HTML para evitar problemas con caracteres especiales.
 
-Mientras el buscador tenga texto escrito, la sección "Explorá por Categorías" se oculta.
+Si Supabase falla, se muestra un mensaje de error en el estado del catálogo y el error queda en la consola.
 
-Cuando se borra todo el texto del buscador, o cuando se toca el botón "Ver todos los productos", las categorías vuelven a aparecer, junto con todas las ofertas y todos los nuevos ingresos.
+## 3. Cómo funciona el filtrado por categoría
 
-### 4. El cartel de "sin resultados"
+Los enlaces que antes tenían `href="#gpu"`, `href="#cpu"`, etc. ahora son botones reales con un atributo `data-categoria`.
 
-El mensaje `#sin-resultados` ahora aparece solamente cuando la búsqueda no encuentra ningún producto en toda la tienda.
+Cada botón tiene la categoría tal cual viene en la base de datos, por ejemplo:
 
-Cuando eso pasa:
+- `data-categoria="Placas de Video"`
+- `data-categoria="Procesadores"`
+- `data-categoria="Memorias RAM"`
+- `data-categoria="Coolers"` (se muestra como "Refrigeración")
+- `data-categoria="Teclados y Mouse"` (se muestra como "Periféricos")
 
-- se ocultan "Ofertas Semanales";
-- se ocultan "Nuevos Ingresos";
-- se oculta el bloque de categorías;
-- se muestra el cartel con el botón "Ver todos los productos".
+Al hacer clic:
 
-Si hay al menos un resultado en alguna de las dos secciones, el cartel no aparece.
+1. se lee la categoría del botón;
+2. se aplica `.filter()` sobre el array completo de productos de Supabase;
+3. se vuelve a dibujar `.grid-inventario` solo con los productos que coinciden.
 
-### 5. El botón "Ver todos"
+El botón **"Todos los productos"** tiene `data-categoria=""`, así que al tocarlo se muestran de nuevo todos los productos sin filtrar. Si se hace clic otra vez sobre la categoría que ya está activa, también se vuelve al listado completo (se deselecciona).
 
-El botón "Ver todos los productos" hace tres cosas:
+El botón activo queda marcado visualmente con la clase `.activo` (fondo turquesa) y con `aria-pressed="true"` para que también lo entiendan los lectores de pantalla. Arriba de la grilla se muestra un texto con la cantidad de productos visibles o un aviso si la categoría no tiene productos.
 
-1. vacía el buscador;
-2. vuelve a mostrar todos los productos;
-3. vuelve a mostrar las categorías.
+## 4. Por qué la tarjeta se estiraba en el catálogo
 
-## Cómo explicarlo al profesor
+Antes `.grid-inventario` usaba `repeat(auto-fit, minmax(220px, 1fr))`. Ese `1fr` significa "quedate con todo el espacio libre". Cuando se filtraba una sola categoría y quedaba un solo producto, la grilla armaba una única columna y esa columna se llevaba el 100% del ancho de la pantalla. Entonces la tarjeta se estiraba, la imagen quedaba gigante y todo se veía deformado. El problema no era la tarjeta en sí, sino la grilla que la obligaba a ocupar todo.
 
-"Antes el buscador no conocía los productos que venían de Supabase porque solo revisaba una lista escrita a mano. Ahora la pantalla guarda todos los productos en una lista general y busca ahí, comparando el nombre y la descripción.
+Ahora la grilla usa `repeat(auto-fill, minmax(240px, 280px))`, con `gap: 1.5rem` y `justify-content: start`. Eso quiere decir: armá columnas de entre 240 y 280 píxeles y alinealas a la izquierda. Si hay un solo producto, se dibuja una columna de 280 px y listo, no se estira más. Además, a `.card-compacta` le puse `max-width: 280px` como un cinturón de seguridad extra. En celulares muy angostos la grilla pasa a una sola columna para que nada se salga de la pantalla.
 
-También corregí la parte visual: si una sección queda sin productos, se oculta completa, incluyendo el título. Mientras el usuario escribe, se esconden las categorías para que la pantalla quede más limpia. El cartel de 'sin resultados' aparece únicamente si no hay coincidencias en ninguna parte de la tienda. Y cuando se borra la búsqueda o se toca 'Ver todos', todo vuelve a mostrarse como al principio."
+## 5. Ficha de producto en dos columnas
+
+En `detalle-producto.html` reemplacé el contenedor viejo por `.detalle-producto`. La parte de arriba ahora es un layout de dos columnas (`.detalle-superior`): a la izquierda la imagen dentro de `.detalle-imagen`, con un máximo de 360 px, fondo blanco y `object-fit: contain`; a la derecha el título, la categoría, la descripción, el precio y el botón "Agregar al carrito". La ficha técnica quedó debajo, ocupando todo el ancho del bloque. En pantallas chicas las dos columnas se apilan una arriba de la otra.
+
+## Explicacion
+
+"En el inicio saqué la sección de categorías porque era redundante y además tenía código JavaScript que ya no servía; con eso el buscador y las secciones de ofertas y nuevos ingresos quedan más limpios y sin errores.
+
+En el catálogo, en vez de tener las tarjetas escritas a mano, el HTML arranca vacío y un script nuevo pide los productos a la API REST de Supabase con `fetch`. Cuando llegan, arma cada tarjeta `.card-compacta` con la imagen, categoría, nombre, descripción y el precio formateado en pesos argentinos.
+
+Para los filtros, cada botón guarda su categoría en un atributo `data-categoria`. Al hacer clic, uso `.filter()` sobre el array de productos y redibujo la grilla solo con los que coinciden. El botón 'Todos los productos' limpia el filtro y muestra todo el inventario, y el botón que está activo se pinta distinto para que se vea cuál está seleccionado."
