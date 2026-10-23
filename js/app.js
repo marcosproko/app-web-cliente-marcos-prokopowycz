@@ -249,3 +249,45 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
+const SUPABASE_URL = 'https://bvleuscwhbgvtdekreqn.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ2bGV1c2N3aGJndnRkZWtyZXFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI3NjQ0NjYsImV4cCI6MjEwODM0MDQ2Nn0.w_FD5NRZ0B0FDZOnVq5mwYCkq0uEmWoEUPOUWj1X6QU';
+
+async function obtenerProductos() {
+  try {
+    const respuesta = await fetch(`${SUPABASE_URL}/rest/v1/Productos?select=*`, {
+      method: 'GET',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`
+      }
+    });
+
+    if (!respuesta.ok) {
+      throw new Error(`Error en el servidor: ${respuesta.status}`);
+    }
+
+    const productos = await respuesta.json();
+
+  
+    const productosAdaptados = productos.map(p => ({
+      ...p,
+      badge: p.oferta ? "-25% OFF" : "NUEVO",
+      badgeClass: p.oferta ? "badge-oferta" : "badge-nuevo",
+      enlaceDetalle: "detalle-producto.html",
+      enlaceCarrito: "carrito.html"
+    }));
+
+    const ofertas = productosAdaptados.filter(p => p.oferta === true);
+   
+    const nuevos = productosAdaptados.filter(p => p.oferta === false);
+
+    
+    renderizarProductos(ofertas, 'ofertas-grid');
+    renderizarProductos(nuevos, 'nuevos-grid');
+
+  } catch (error) {
+    console.error('Fallo al conectar con Supabase:', error);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', obtenerProductos);
