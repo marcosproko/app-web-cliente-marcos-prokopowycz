@@ -1,4 +1,4 @@
-const productosOfertas = [
+let productosOfertas = [
   {
     id: 1,
     nombre: "Placa de video ASUS RTX 4070",
@@ -9,6 +9,7 @@ const productosOfertas = [
     precioOriginal: 1599000,
     badge: "-25% OFF",
     badgeClass: "badge-oferta",
+    oferta: true,
     enlaceDetalle: "detalle-producto.html",
     enlaceCarrito: "carrito.html"
   },
@@ -22,6 +23,7 @@ const productosOfertas = [
     precioOriginal: 1199000,
     badge: "-15% OFF",
     badgeClass: "badge-oferta",
+    oferta: true,
     enlaceDetalle: "detalle-producto.html",
     enlaceCarrito: "carrito.html"
   },
@@ -35,12 +37,13 @@ const productosOfertas = [
     precioOriginal: 549000,
     badge: "-20% OFF",
     badgeClass: "badge-oferta",
+    oferta: true,
     enlaceDetalle: "detalle-producto.html",
     enlaceCarrito: "carrito.html"
   }
 ];
 
-const productosNuevos = [
+let productosNuevos = [
   {
     id: 4,
     nombre: "Cooler ASUS ROG RYUJIN III",
@@ -51,6 +54,7 @@ const productosNuevos = [
     precioOriginal: null,
     badge: "NUEVO",
     badgeClass: "badge-nuevo",
+    oferta: false,
     enlaceDetalle: "detalle-producto.html",
     enlaceCarrito: "carrito.html"
   },
@@ -64,6 +68,7 @@ const productosNuevos = [
     precioOriginal: null,
     badge: "NUEVO",
     badgeClass: "badge-nuevo",
+    oferta: false,
     enlaceDetalle: "detalle-producto.html",
     enlaceCarrito: "carrito.html"
   },
@@ -77,10 +82,13 @@ const productosNuevos = [
     precioOriginal: null,
     badge: "NUEVO",
     badgeClass: "badge-nuevo",
+    oferta: false,
     enlaceDetalle: "detalle-producto.html",
     enlaceCarrito: "carrito.html"
   }
 ];
+
+let todosLosProductos = [...productosOfertas, ...productosNuevos];
 
 function formatearPrecio(precio) {
   return new Intl.NumberFormat('es-AR', {
@@ -135,74 +143,67 @@ function renderizarProductos(productos, contenedorId) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  renderizarProductos(productosOfertas, 'ofertas-grid');
-  renderizarProductos(productosNuevos, 'nuevos-grid');
-
   const buscador = document.getElementById('buscador-productos');
-  const ofertasGrid = document.getElementById('ofertas-grid');
-  const nuevosGrid = document.getElementById('nuevos-grid');
   const sinResultados = document.getElementById('sin-resultados');
   const btnVerTodos = document.getElementById('btn-ver-todos');
-  const seccionesMain = document.querySelectorAll('main > section');
+  const seccionCategorias = document.getElementById('seccion-categorias');
   const seccionOfertas = document.getElementById('seccion-ofertas');
   const seccionNuevos = document.getElementById('seccion-nuevos');
   const seccionFiltrados = document.getElementById('seccion-filtrados');
-  const filtradosGrid = document.getElementById('filtrados-grid');
   const tituloFiltrados = document.getElementById('titulo-filtrados');
+  const chips = document.querySelectorAll('.chip');
+  let categoriaActiva = null;
+
+  function mostrarTodosLosProductos() {
+    renderizarProductos(productosOfertas, 'ofertas-grid');
+    renderizarProductos(productosNuevos, 'nuevos-grid');
+
+    seccionOfertas.style.display = productosOfertas.length > 0 ? '' : 'none';
+    seccionNuevos.style.display = productosNuevos.length > 0 ? '' : 'none';
+    seccionFiltrados.style.display = 'none';
+    seccionCategorias.style.display = '';
+    sinResultados.hidden = true;
+
+    categoriaActiva = null;
+    chips.forEach(c => c.classList.remove('activo'));
+  }
 
   function filtrarProductos(termino) {
     const terminoLower = termino.toLowerCase().trim();
-    const ofertasFiltradas = productosOfertas.filter(p =>
-      p.nombre.toLowerCase().includes(terminoLower) || p.descripcion.toLowerCase().includes(terminoLower)
+
+    if (terminoLower === '') {
+      mostrarTodosLosProductos();
+      return;
+    }
+
+    const coincidencias = todosLosProductos.filter(p =>
+      (p.nombre || '').toLowerCase().includes(terminoLower) ||
+      (p.descripcion || '').toLowerCase().includes(terminoLower)
     );
-    const nuevosFiltrados = productosNuevos.filter(p =>
-      p.nombre.toLowerCase().includes(terminoLower) || p.descripcion.toLowerCase().includes(terminoLower)
-    );
+
+    const ofertasFiltradas = coincidencias.filter(p => p.oferta === true);
+    const nuevosFiltrados = coincidencias.filter(p => p.oferta === false);
 
     renderizarProductos(ofertasFiltradas, 'ofertas-grid');
     renderizarProductos(nuevosFiltrados, 'nuevos-grid');
 
-    const hayResultados = ofertasFiltradas.length > 0 || nuevosFiltrados.length > 0;
+    const hayOfertas = ofertasFiltradas.length > 0;
+    const hayNuevos = nuevosFiltrados.length > 0;
+    const hayResultados = hayOfertas || hayNuevos;
 
-    seccionesMain.forEach(seccion => {
-      seccion.style.display = hayResultados ? '' : 'none';
-    });
-    sinResultados.hidden = hayResultados;
-  }
-
-  buscador.addEventListener('input', (e) => {
-    filtrarProductos(e.target.value);
-    if (e.target.value.trim() !== '') {
-      seccionOfertas.style.display = '';
-      seccionNuevos.style.display = '';
-      seccionFiltrados.style.display = 'none';
-      categoriaActiva = null;
-      chips.forEach(c => c.classList.remove('activo'));
-    }
-  });
-
-  btnVerTodos.addEventListener('click', () => {
-    buscador.value = '';
-    renderizarProductos(productosOfertas, 'ofertas-grid');
-    renderizarProductos(productosNuevos, 'nuevos-grid');
-    seccionOfertas.style.display = '';
-    seccionNuevos.style.display = '';
+    seccionOfertas.style.display = hayOfertas ? '' : 'none';
+    seccionNuevos.style.display = hayNuevos ? '' : 'none';
     seccionFiltrados.style.display = 'none';
-    seccionesMain.forEach(seccion => {
-      seccion.style.display = '';
-    });
-    sinResultados.hidden = true;
+    seccionCategorias.style.display = 'none';
+    sinResultados.hidden = hayResultados;
+
     categoriaActiva = null;
     chips.forEach(c => c.classList.remove('activo'));
-  });
-
-  const chips = document.querySelectorAll('.chip');
-  let categoriaActiva = null;
+  }
 
   function filtrarPorCategoria(categoria) {
     if (categoria) {
-      const todosProductos = [...productosOfertas, ...productosNuevos];
-      const filtrados = todosProductos.filter(p => p.categoria === categoria);
+      const filtrados = todosLosProductos.filter(p => p.categoria === categoria);
 
       renderizarProductos(filtrados, 'filtrados-grid');
       tituloFiltrados.textContent = `Resultados para: ${categoria}`;
@@ -210,16 +211,31 @@ document.addEventListener('DOMContentLoaded', () => {
       seccionOfertas.style.display = 'none';
       seccionNuevos.style.display = 'none';
       seccionFiltrados.style.display = '';
-
-      const hayResultados = filtrados.length > 0;
-      sinResultados.hidden = hayResultados;
+      seccionCategorias.style.display = '';
+      sinResultados.hidden = filtrados.length > 0;
     } else {
-      seccionOfertas.style.display = '';
-      seccionNuevos.style.display = '';
-      seccionFiltrados.style.display = 'none';
-      sinResultados.hidden = true;
+      mostrarTodosLosProductos();
     }
   }
+
+  function aplicarVistaSegunBusqueda() {
+    if (buscador.value.trim() !== '') {
+      filtrarProductos(buscador.value);
+    } else if (categoriaActiva) {
+      filtrarPorCategoria(categoriaActiva);
+    } else {
+      mostrarTodosLosProductos();
+    }
+  }
+
+  buscador.addEventListener('input', (e) => {
+    filtrarProductos(e.target.value);
+  });
+
+  btnVerTodos.addEventListener('click', () => {
+    buscador.value = '';
+    mostrarTodosLosProductos();
+  });
 
   chips.forEach(chip => {
     chip.addEventListener('click', (e) => {
@@ -239,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (categoriaActiva === categoria) {
         categoriaActiva = null;
         chips.forEach(c => c.classList.remove('activo'));
-        filtrarPorCategoria(null);
+        mostrarTodosLosProductos();
       } else {
         categoriaActiva = categoria;
         chips.forEach(c => c.classList.remove('activo'));
@@ -248,6 +264,10 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+
+  window.addEventListener('productos-cargados', aplicarVistaSegunBusqueda);
+
+  mostrarTodosLosProductos();
 });
 const SUPABASE_URL = 'https://bvleuscwhbgvtdekreqn.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ2bGV1c2N3aGJndnRkZWtyZXFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI3NjQ0NjYsImV4cCI6MjEwODM0MDQ2Nn0.w_FD5NRZ0B0FDZOnVq5mwYCkq0uEmWoEUPOUWj1X6QU';
@@ -271,19 +291,18 @@ async function obtenerProductos() {
   
     const productosAdaptados = productos.map(p => ({
       ...p,
+      oferta: Boolean(p.oferta),
       badge: p.oferta ? "-25% OFF" : "NUEVO",
       badgeClass: p.oferta ? "badge-oferta" : "badge-nuevo",
       enlaceDetalle: "detalle-producto.html",
       enlaceCarrito: "carrito.html"
     }));
 
-    const ofertas = productosAdaptados.filter(p => p.oferta === true);
-   
-    const nuevos = productosAdaptados.filter(p => p.oferta === false);
+    todosLosProductos = productosAdaptados;
+    productosOfertas = productosAdaptados.filter(p => p.oferta === true);
+    productosNuevos = productosAdaptados.filter(p => p.oferta === false);
 
-    
-    renderizarProductos(ofertas, 'ofertas-grid');
-    renderizarProductos(nuevos, 'nuevos-grid');
+    window.dispatchEvent(new Event('productos-cargados'));
 
   } catch (error) {
     console.error('Fallo al conectar con Supabase:', error);
