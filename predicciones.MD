@@ -35,4 +35,5 @@
 ## 12. Filtro interactivo por categorías
 - Predicción: Espero capturar el evento 'click' en los enlaces de categorías (.chip) para filtrar el catálogo en pantalla mostrando únicamente los productos que coincidan con la categoría seleccionada, o el catálogo completo si se elige una opción general.
 
-
+## 13. Integración de Supabase y Catálogo Dinámico
+- Predicción: Espero conectar la tienda a una base de datos PostgreSQL en la nube (Supabase) mediante la Fetch API nativa y el endpoint REST (/rest/v1/Productos). La función asíncrona deberá consultar los registros remotos, adaptar las propiedades de las tarjetas y poblar la grilla de productos en el DOM sin depender de arrays estáticos locales.
