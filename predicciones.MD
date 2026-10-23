@@ -37,3 +37,6 @@
 
 ## 13. Integración de Supabase y Catálogo Dinámico
 - Predicción: Espero conectar la tienda a una base de datos PostgreSQL en la nube (Supabase) mediante la Fetch API nativa y el endpoint REST (/rest/v1/Productos). La función asíncrona deberá consultar los registros remotos, adaptar las propiedades de las tarjetas y poblar la grilla de productos en el DOM sin depender de arrays estáticos locales.
+
+## 15. Refactorización del Buscador y Limpieza de UI en Inicio
+- Predicción: Espero modificar app.js para que el buscador filtre sobre la totalidad de los productos obtenidos de Supabase y no sobre listas locales. Además, implementaré control dinámico del DOM para ocultar secciones vacías ('Ofertas Semanales' o 'Nuevos Ingresos'), ocultar la botonera de categorías durante la búsqueda y mostrar el mensaje 'sin resultados' únicamente cuando no existan coincidencias en toda la tienda.
