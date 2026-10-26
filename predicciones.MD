@@ -52,3 +52,6 @@
 
 ## 20. Pulido de UI, Accesibilidad Semántica y Hero Banner
 - Predicción: Espero estructurar un banner de bienvenida (hero section) semántico en index.html con llamado a la acción hacia catalogo.html para mejorar la entrada visual. En la navegación principal, implementaré la clase activa dinámica o estática según la página para orientar al usuario. En accesibilidad, sustituiré el uso de h1 en logos de páginas secundarias por contenedores semánticos con texto descriptivo, agregaré aria-labels específicos en los botones interactivos de compra y optimizaré el cálculo visual de los badges de oferta para que reflejen dinámicamente el porcentaje de descuento si existe un precio original.
+
+## 21. Panel de Backoffice y Gestión de Productos (CRUD) con Supabase
+- Predicción: Espero crear una vista administrativa (admin.html y js/admin.js) que permita dar de alta productos nuevos mediante una petición POST con fetch() a Supabase, validar que los campos obligatorios (nombre, precio, categoría, imagen y descripción) no estén vacíos, y renderizar una tabla de gestión con los 18 productos existentes donde cada fila incluya un botón interactivo para eliminar productos (DELETE) con confirmación previa y refresco dinámico en pantalla, respondiendo a la observación de la cátedra sobre gestión de productos.
