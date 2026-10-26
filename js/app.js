@@ -165,7 +165,7 @@ async function obtenerProductos() {
       oferta: Boolean(p.oferta),
       badge: p.oferta ? "-25% OFF" : "NUEVO",
       badgeClass: p.oferta ? "badge-oferta" : "badge-nuevo",
-      enlaceDetalle: "detalle-producto.html",
+      enlaceDetalle: `detalle-producto.html?id=${encodeURIComponent(p.id)}`,
       enlaceCarrito: "carrito.html"
     }));
 
