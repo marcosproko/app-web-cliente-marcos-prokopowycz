@@ -1,94 +1,6 @@
-let productosOfertas = [
-  {
-    id: 1,
-    nombre: "Placa de video ASUS RTX 4070",
-    categoria: "PLACA DE VIDEO",
-    imagen: "assets/img/4070.jpg",
-    descripcion: "12 GB GDDR6X con soporte DLSS 3 para máxima fluidez en 1440p y 4K.",
-    precio: 1199250,
-    precioOriginal: 1599000,
-    badge: "-25% OFF",
-    badgeClass: "badge-oferta",
-    oferta: true,
-    enlaceDetalle: "detalle-producto.html",
-    enlaceCarrito: "carrito.html"
-  },
-  {
-    id: 2,
-    nombre: "Procesador Intel i9",
-    categoria: "PROCESADOR",
-    imagen: "assets/img/i9.jpg",
-    descripcion: "10 núcleos y 20 hilos optimizados para alto rendimiento y multitarea.",
-    precio: 1019150,
-    precioOriginal: 1199000,
-    badge: "-15% OFF",
-    badgeClass: "badge-oferta",
-    oferta: true,
-    enlaceDetalle: "detalle-producto.html",
-    enlaceCarrito: "carrito.html"
-  },
-  {
-    id: 3,
-    nombre: "Memoria RAM Corsair DDR5",
-    categoria: "MEMORIA",
-    imagen: "assets/img/Memoria_Corsair_DDR5_64GB__2x32GB__6000MHz_Vengeance_XMP_3.0_RGB_96e9a386-grn.jpg",
-    descripcion: "Kit 64 GB (2x32GB) a 6000 MHz con iluminación RGB integrada.",
-    precio: 439200,
-    precioOriginal: 549000,
-    badge: "-20% OFF",
-    badgeClass: "badge-oferta",
-    oferta: true,
-    enlaceDetalle: "detalle-producto.html",
-    enlaceCarrito: "carrito.html"
-  }
-];
-
-let productosNuevos = [
-  {
-    id: 4,
-    nombre: "Cooler ASUS ROG RYUJIN III",
-    categoria: "COOLER",
-    imagen: "assets/img/Cooler_CPU_ASUS_ROG_RYUJIN_III_360_ARGB_EXTREME_cc784055-grn.jpg",
-    descripcion: "Sistema de refrigeración líquida de 360 mm con pantalla LCD e iluminación ARGB.",
-    precio: 199000,
-    precioOriginal: null,
-    badge: "NUEVO",
-    badgeClass: "badge-nuevo",
-    oferta: false,
-    enlaceDetalle: "detalle-producto.html",
-    enlaceCarrito: "carrito.html"
-  },
-  {
-    id: 5,
-    nombre: "Monitor Gamer 27\" Full HD",
-    categoria: "MONITOR",
-    imagen: "assets/img/monitor27.jpg",
-    descripcion: "Panel IPS de 144 Hz con 1 ms de respuesta y compatibilidad FreeSync.",
-    precio: 299000,
-    precioOriginal: null,
-    badge: "NUEVO",
-    badgeClass: "badge-nuevo",
-    oferta: false,
-    enlaceDetalle: "detalle-producto.html",
-    enlaceCarrito: "carrito.html"
-  },
-  {
-    id: 6,
-    nombre: "Auriculares Gamer Pro",
-    categoria: "AURICULAR",
-    imagen: "assets/img/Auriculares.jpg",
-    descripcion: "Sonido envolvente 7.1 con cancelación activa de ruido y micrófono desmontable.",
-    precio: 79000,
-    precioOriginal: null,
-    badge: "NUEVO",
-    badgeClass: "badge-nuevo",
-    oferta: false,
-    enlaceDetalle: "detalle-producto.html",
-    enlaceCarrito: "carrito.html"
-  }
-];
-
-let todosLosProductos = [...productosOfertas, ...productosNuevos];
+let productosOfertas = [];
+let productosNuevos =[];
+let todosLosProductos = [];
 
 function formatearPrecio(precio) {
   return new Intl.NumberFormat('es-AR', {
@@ -99,12 +11,25 @@ function formatearPrecio(precio) {
   }).format(precio).replace('ARS', '$');
 }
 
+function escaparHTML(valor) {
+  return String(valor ?? '').replace(/[&<>"']/g, (caracter) => {
+    const reemplazos = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    };
+    return reemplazos[caracter];
+  });
+}
+
 function crearTarjetaProducto(producto) {
   const article = document.createElement('article');
   article.className = 'card';
 
   const badgeHTML = producto.badge
-    ? `<span class="badge ${producto.badgeClass}">${producto.badge}</span>`
+    ? `<span class="badge ${escaparHTML(producto.badgeClass)}">${escaparHTML(producto.badge)}</span>`
     : '';
 
   const precioHTML = producto.precioOriginal
@@ -115,17 +40,17 @@ function crearTarjetaProducto(producto) {
     ${badgeHTML}
     <figure>
       <img
-        src="${producto.imagen}"
-        alt="${producto.nombre}"
+        src="${escaparHTML(producto.imagen)}"
+        alt="${escaparHTML(producto.nombre)}"
         loading="lazy"
       />
     </figure>
-    <span class="tag-categoria">${producto.categoria}</span>
-    <h3>${producto.nombre}</h3>
-    <p>${producto.descripcion}</p>
+    <span class="tag-categoria">${escaparHTML(producto.categoria)}</span>
+    <h3>${escaparHTML(producto.nombre)}</h3>
+    <p>${escaparHTML(producto.descripcion)}</p>
     ${precioHTML}
-    <a href="${producto.enlaceDetalle}" class="btn-detalle">Ver detalle →</a>
-    <a href="${producto.enlaceCarrito}" class="btn-comprar">Agregar al carrito 🛒</a>
+    <a href="${escaparHTML(producto.enlaceDetalle)}" class="btn-detalle">Ver detalle →</a>
+    <a href="${escaparHTML(producto.enlaceCarrito)}" class="btn-comprar">Agregar al carrito 🛒</a>
   `;
 
   return article;
@@ -197,6 +122,14 @@ document.addEventListener('DOMContentLoaded', () => {
   buscador.addEventListener('input', (e) => {
     filtrarProductos(e.target.value);
   });
+
+  const formBuscador = document.querySelector('.search-centrado');
+  if (formBuscador) {
+    formBuscador.addEventListener('submit', (e) => {
+      e.preventDefault();
+      filtrarProductos(buscador.value);
+    });
+  }
 
   btnVerTodos.addEventListener('click', () => {
     buscador.value = '';

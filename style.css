@@ -15,11 +15,11 @@
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(24px);
+    translate: 0 24px;
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    translate: 0 0;
   }
 }
 
@@ -657,6 +657,21 @@ main {
   flex-direction: column;
   gap: 1.2rem;
   max-width: 650px;
+}
+
+.mensaje-exito {
+  max-width: 650px;
+  margin-top: 1.5rem;
+  padding: 1rem 1.2rem;
+  background: #0d1f19;
+  border: 1px solid #10b981;
+  border-radius: 8px;
+  color: #10b981;
+  font-weight: 600;
+}
+
+.mensaje-exito[hidden] {
+  display: none;
 }
 
 .campo {

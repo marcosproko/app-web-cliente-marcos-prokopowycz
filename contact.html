@@ -74,6 +74,16 @@
 
           <button type="submit" class="btn-comprar">Enviar mensaje</button>
         </form>
+
+        <div
+          id="mensaje-exito"
+          class="mensaje-exito"
+          role="status"
+          aria-live="polite"
+          hidden
+        >
+          ¡Mensaje enviado con éxito! Nos pondremos en contacto a la brevedad.
+        </div>
       </section>
 
       <section aria-label="Ubicación física del local" class="mapa-seccion">
@@ -87,16 +97,66 @@
           </iframe>
         </div>
       </section>
+
+      <section
+        id="preguntas-frecuentes"
+        aria-label="Preguntas frecuentes"
+        class="contacto-seccion"
+      >
+        <h2>Preguntas frecuentes</h2>
+        <p>
+          ¿Hacen envíos? Sí, despachamos a todo el país. ¿Los productos tienen
+          garantía? Todos cuentan con garantía oficial. Si tenés otra duda,
+          escribinos desde el formulario y te respondemos a la brevedad.
+        </p>
+      </section>
+
+      <section id="envios" aria-label="Información de envíos" class="contacto-seccion">
+        <h2>Envíos</h2>
+        <p>
+          Realizamos envíos a todo el territorio nacional en un plazo de 24 a 72
+          horas hábiles. También podés retirar tu pedido sin cargo en nuestro
+          local, coordinando previamente el día y el horario.
+        </p>
+      </section>
+
+      <section
+        id="terminos"
+        aria-label="Términos y condiciones"
+        class="contacto-seccion"
+      >
+        <h2>Términos y condiciones</h2>
+        <p>
+          Los precios están expresados en pesos argentinos y pueden variar sin
+          aviso previo. Las compras están sujetas a disponibilidad de stock. La
+          garantía cubre fallas de fábrica y no incluye daños por mal uso.
+        </p>
+      </section>
     </main>
 
     <footer>
       <div class="footer-links">
         <a href="contact.html">Contacto</a>
-        <a href="contact.html#faq">Preguntas frecuentes</a>
+        <a href="contact.html#preguntas-frecuentes">Preguntas frecuentes</a>
         <a href="contact.html#envios">Envíos</a>
         <a href="contact.html#terminos">Términos y condiciones</a>
       </div>
       <p>© 2026 WOL Hardware. Todos los derechos reservados.</p>
     </footer>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const formulario = document.querySelector('.form-contacto');
+        const mensajeExito = document.getElementById('mensaje-exito');
+
+        if (!formulario || !mensajeExito) return;
+
+        formulario.addEventListener('submit', (e) => {
+          e.preventDefault();
+          formulario.reset();
+          mensajeExito.hidden = false;
+        });
+      });
+    </script>
   </body>
 </html>
