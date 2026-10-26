@@ -46,3 +46,6 @@
 
 ## 17. Corrección de Enlaces 404, Submit del Buscador y Parpadeo de Portada
 - Predicción: Espero prevenir la recarga involuntaria de index.html al presionar Enter en el formulario del buscador mediante event.preventDefault(), limpiar los arrays estáticos de app.js para evitar el parpadeo inicial frente a Supabase, estandarizar las rutas a catalogo.html en minúsculas para prevenir errores 404 en Linux y restaurar el efecto hover de elevación en las tarjetas resolviendo el conflicto de transform con las animaciones de carga.
+
+## 18. Ficha de Detalle de Producto Dinámica con Parámetros de URL y Supabase
+- Predicción: Espero conectar los botones de 'Ver detalle' / 'Detalle' tanto en index.html como en catalogo.html para que transmitan el identificador único del producto mediante la query string (?id=X). En detalle-producto.html, implementaré la captura del parámetro mediante URLSearchParams y realizaré la consulta asíncrona a Supabase para inyectar dinámicamente los datos reales (nombre, imagen, descripción, categoría y precio) en el DOM, reemplazando la información estática de la RTX 4070 y mostrando un estado de error si el ID no existe.
