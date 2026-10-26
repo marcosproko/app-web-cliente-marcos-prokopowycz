@@ -49,3 +49,6 @@
 
 ## 19. Carrito de Compras Persistente con LocalStorage
 - Predicción: Espero conectar los botones 'Agregar al carrito' de la portada, el catálogo y la ficha de detalle para almacenar los productos seleccionados en localStorage como array de objetos. En carrito.html renderizaré dinámicamente la tabla leyendo ese storage, permitiendo sumar, restar o eliminar ítems individuales mediante delegación de eventos, calculando subtotales y total con reduce(), implementando el botón de vaciar carrito, estado de carrito vacío y actualizando un contador visual en el menú de navegación en todas las páginas.
+
+## 20. Pulido de UI, Accesibilidad Semántica y Hero Banner
+- Predicción: Espero estructurar un banner de bienvenida (hero section) semántico en index.html con llamado a la acción hacia catalogo.html para mejorar la entrada visual. En la navegación principal, implementaré la clase activa dinámica o estática según la página para orientar al usuario. En accesibilidad, sustituiré el uso de h1 en logos de páginas secundarias por contenedores semánticos con texto descriptivo, agregaré aria-labels específicos en los botones interactivos de compra y optimizaré el cálculo visual de los badges de oferta para que reflejen dinámicamente el porcentaje de descuento si existe un precio original.
