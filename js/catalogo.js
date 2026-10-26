@@ -8,6 +8,54 @@ const botonesFiltro = document.querySelectorAll('.btn-filtro');
 let productos = [];
 let categoriaActiva = '';
 
+const GRUPOS_CATEGORIA = [
+  ['refrigeracion', 'coolers', 'cooler'],
+  ['perifericos', 'periferico', 'teclados y mouse', 'teclado y mouse', 'teclados', 'mouse']
+];
+
+const CATEGORIAS_TODAS = new Set(['todos', 'todos los productos', 'todas', 'todas las categorias']);
+
+function normalizarCategoria(texto) {
+  return String(texto ?? '')
+    .trim()
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\s+/g, ' ');
+}
+
+function obtenerGrupoCategoria(texto) {
+  const normalizada = normalizarCategoria(texto);
+  return GRUPOS_CATEGORIA.find((grupo) => grupo.includes(normalizada)) || null;
+}
+
+function sonCategoriasEquivalentes(categoriaA, categoriaB) {
+  const normalizadaA = normalizarCategoria(categoriaA);
+  const normalizadaB = normalizarCategoria(categoriaB);
+
+  if (normalizadaA === normalizadaB) return true;
+  if (!normalizadaA || !normalizadaB) return false;
+
+  const grupoA = obtenerGrupoCategoria(normalizadaA);
+  const grupoB = obtenerGrupoCategoria(normalizadaB);
+
+  return Boolean(grupoA && grupoA === grupoB);
+}
+
+function esCategoriaTodas(categoria) {
+  return CATEGORIAS_TODAS.has(normalizarCategoria(categoria));
+}
+
+function obtenerCategoriaBoton(boton) {
+  const desdeDataset = boton.dataset.categoria;
+
+  if (typeof desdeDataset === 'string' && desdeDataset.trim() !== '') {
+    return desdeDataset.trim();
+  }
+
+  return (boton.textContent || '').trim();
+}
+
 function escaparHTML(valor) {
   return String(valor ?? '').replace(/[&<>"']/g, (caracter) => {
     const reemplazos = {
@@ -73,16 +121,20 @@ function renderizarProductos(lista) {
 }
 
 function aplicarFiltro(categoria) {
-  categoriaActiva = categoria;
+  categoriaActiva = esCategoriaTodas(categoria) ? '' : String(categoria ?? '').trim();
 
-  const productosFiltrados = categoria
-    ? productos.filter((producto) => producto.categoria === categoria)
+  const productosFiltrados = categoriaActiva
+    ? productos.filter((producto) => sonCategoriasEquivalentes(producto.categoria, categoriaActiva))
     : productos;
 
   renderizarProductos(productosFiltrados);
 
   botonesFiltro.forEach((boton) => {
-    const esActivo = boton.dataset.categoria === categoria;
+    const categoriaBoton = obtenerCategoriaBoton(boton);
+    const esActivo = categoriaActiva === ''
+      ? esCategoriaTodas(categoriaBoton)
+      : sonCategoriasEquivalentes(categoriaBoton, categoriaActiva);
+
     boton.classList.toggle('activo', esActivo);
     boton.setAttribute('aria-pressed', String(esActivo));
   });
@@ -112,9 +164,11 @@ async function obtenerProductos() {
 
 botonesFiltro.forEach((boton) => {
   boton.addEventListener('click', () => {
-    const categoria = boton.dataset.categoria;
+    const categoria = obtenerCategoriaBoton(boton);
 
-    if (categoria === categoriaActiva) {
+    if (esCategoriaTodas(categoria)) {
+      aplicarFiltro('');
+    } else if (sonCategoriasEquivalentes(categoria, categoriaActiva)) {
       aplicarFiltro('');
     } else {
       aplicarFiltro(categoria);

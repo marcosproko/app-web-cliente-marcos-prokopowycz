@@ -237,8 +237,10 @@ async function obtenerProductos() {
     }));
 
     todosLosProductos = productosAdaptados;
-    productosOfertas = productosAdaptados.filter(p => p.oferta === true);
-    productosNuevos = productosAdaptados.filter(p => p.oferta === false);
+    productosOfertas = productosAdaptados.filter(p => p.oferta === true).slice(0, 3);
+    productosNuevos = productosAdaptados.filter(p => p.oferta === false).slice(0, 3);
+    renderizarProductos(productosOfertas, 'ofertas-grid');
+    renderizarProductos(productosNuevos, 'nuevos-grid');
 
     window.dispatchEvent(new Event('productos-cargados'));
 
