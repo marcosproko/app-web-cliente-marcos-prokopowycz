@@ -66,7 +66,7 @@ El botón activo queda marcado visualmente con la clase `.activo` (fondo turques
 
 Antes `.grid-inventario` usaba `repeat(auto-fit, minmax(220px, 1fr))`. Ese `1fr` significa "quedate con todo el espacio libre". Cuando se filtraba una sola categoría y quedaba un solo producto, la grilla armaba una única columna y esa columna se llevaba el 100% del ancho de la pantalla. Entonces la tarjeta se estiraba, la imagen quedaba gigante y todo se veía deformado. El problema no era la tarjeta en sí, sino la grilla que la obligaba a ocupar todo.
 
-Ahora la grilla usa `repeat(auto-fill, minmax(240px, 280px))`, con `gap: 1.5rem` y `justify-content: start`. Eso quiere decir: armá columnas de entre 240 y 280 píxeles y alinealas a la izquierda. Si hay un solo producto, se dibuja una columna de 280 px y listo, no se estira más. Además, a `.card-compacta` le puse `max-width: 280px` como un cinturón de seguridad extra. En celulares muy angostos la grilla pasa a una sola columna para que nada se salga de la pantalla.
+Ahora la grilla usa `repeat(auto-fit, minmax(240px, 1fr))`, con `gap: 1.5rem`, un `max-width: 1200px` centrado con `margin: 0 auto` y `width: 100%`. Eso quiere decir: armá columnas de al menos 240 píxeles que se reparten el espacio disponible, dentro de un contenedor de hasta 1200 px centrado en la pantalla. Además, a `.card-compacta` le puse `max-width: 280px` como un cinturón de seguridad extra para que la tarjeta no se estire de más. En celulares muy angostos la grilla pasa a una sola columna para que nada se salga de la pantalla.
 
 ## 5. Ficha de producto en dos columnas
 
@@ -79,3 +79,21 @@ En `detalle-producto.html` reemplacé el contenedor viejo por `.detalle-producto
 En el catálogo, en vez de tener las tarjetas escritas a mano, el HTML arranca vacío y un script nuevo pide los productos a la API REST de Supabase con `fetch`. Cuando llegan, arma cada tarjeta `.card-compacta` con la imagen, categoría, nombre, descripción y el precio formateado en pesos argentinos.
 
 Para los filtros, cada botón guarda su categoría en un atributo `data-categoria`. Al hacer clic, uso `.filter()` sobre el array de productos y redibujo la grilla solo con los que coinciden. El botón 'Todos los productos' limpia el filtro y muestra todo el inventario, y el botón que está activo se pinta distinto para que se vea cuál está seleccionado."
+
+## 6. Buscador sin recargas y tarjetas con elevación
+
+### Por qué se recargaba la página al buscar
+
+El buscador del inicio está dentro de un `<form>`. Cuando se presiona **Enter** o se hace clic en **Buscar**, el navegador hace lo que hace todo formulario por defecto: enviar los datos y volver a cargar la página. Por eso el texto escrito se perdía y la búsqueda parecía reiniciarse.
+
+La solución fue escuchar el evento `submit` de ese formulario en `js/app.js` y ejecutar `e.preventDefault()`. Esa línea le dice al navegador "no envíes el formulario ni recargues". Después se vuelve a filtrar con el texto que ya está en el input, así que la búsqueda funciona igual con Enter, con el botón o escribiendo en tiempo real.
+
+### Por qué las tarjetas no se elevaban al pasar el mouse
+
+Las tarjetas usan una animación de entrada llamada `fadeInUp`. Esa animación terminaba con `transform: translateY(0)` y se quedaba aplicada para siempre por el `forwards`. Como la animación tiene prioridad sobre el estilo normal, el `transform` del `:hover` (`translateY(-4px)`) nunca se veía: la tarjeta quedaba "congelada" en su posición final.
+
+Ahora la animación mueve la propiedad `translate` en lugar de `transform`. Al terminar, `transform` queda libre y el selector `.card:hover` puede aplicar su elevación de `-4px` con la transición suave de siempre. El efecto visual de entrada se mantiene, pero ya no bloquea el hover.
+
+### Enlaces del pie de página
+
+En `contact.html` se agregaron las secciones con los ids `#preguntas-frecuentes`, `#envios` y `#terminos`, cada una con un texto breve. También se actualizaron los enlaces del footer en todas las páginas para que apunten a `contact.html#preguntas-frecuentes` y no queden enlaces muertos.
