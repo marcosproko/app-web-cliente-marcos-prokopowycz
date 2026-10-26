@@ -46,3 +46,6 @@
 
 ## 17. Corrección de Enlaces 404, Submit del Buscador y Parpadeo de Portada
 - Predicción: Espero prevenir la recarga involuntaria de index.html al presionar Enter en el formulario del buscador mediante event.preventDefault(), limpiar los arrays estáticos de app.js para evitar el parpadeo inicial frente a Supabase, estandarizar las rutas a catalogo.html en minúsculas para prevenir errores 404 en Linux y restaurar el efecto hover de elevación en las tarjetas resolviendo el conflicto de transform con las animaciones de carga.
+
+## 19. Carrito de Compras Persistente con LocalStorage
+- Predicción: Espero conectar los botones 'Agregar al carrito' de la portada, el catálogo y la ficha de detalle para almacenar los productos seleccionados en localStorage como array de objetos. En carrito.html renderizaré dinámicamente la tabla leyendo ese storage, permitiendo sumar, restar o eliminar ítems individuales mediante delegación de eventos, calculando subtotales y total con reduce(), implementando el botón de vaciar carrito, estado de carrito vacío y actualizando un contador visual en el menú de navegación en todas las páginas.
