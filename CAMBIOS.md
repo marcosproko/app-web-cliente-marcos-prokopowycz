@@ -97,3 +97,75 @@ Ahora la animación mueve la propiedad `translate` en lugar de `transform`. Al t
 ### Enlaces del pie de página
 
 En `contact.html` se agregaron las secciones con los ids `#preguntas-frecuentes`, `#envios` y `#terminos`, cada una con un texto breve. También se actualizaron los enlaces del footer en todas las páginas para que apunten a `contact.html#preguntas-frecuentes` y no queden enlaces muertos.
+
+## 7. Detalle de producto dinámico con `URLSearchParams`
+
+### Un solo HTML para todos los productos
+
+Antes `detalle-producto.html` era una página fija: siempre mostraba la misma placa de video escrita a mano. Ahora esa misma página sirve para cualquiera de los 18 productos, sin necesidad de crear un archivo HTML por producto.
+
+La clave está en la URL. Los botones **"Detalle"** del inicio (`js/app.js`) y del catálogo (`js/catalogo.js`) ya no apuntan siempre al mismo lugar, sino que arman el enlace con el `id` del producto que se está dibujando:
+
+```js
+`detalle-producto.html?id=${encodeURIComponent(producto.id)}`
+```
+
+Entonces, si un producto tiene `id = 45`, el botón lleva a:
+
+```text
+detalle-producto.html?id=45
+```
+
+Y si otro tiene `id = 52`, lleva a:
+
+```text
+detalle-producto.html?id=52
+```
+
+El archivo HTML es siempre el mismo; lo único que cambia es el dato que viaja después del signo `?`.
+
+### Qué hace `URLSearchParams`
+
+`URLSearchParams` es una herramienta del navegador que lee la parte de la URL que viene después de `?` (la llamada *query string*) y la convierte en pares clave/valor.
+
+En `js/detalle.js` se usa así:
+
+```js
+const parametros = new URLSearchParams(window.location.search);
+const id = parametros.get('id');
+```
+
+- `window.location.search` devuelve `"?id=45"`.
+- `new URLSearchParams(...)` interpreta ese texto.
+- `parametros.get('id')` devuelve `"45"`.
+
+Con ese `id`, el script pide a Supabase solamente ese producto:
+
+```js
+`${SUPABASE_URL}/rest/v1/Productos?id=eq.${id}&select=*`
+```
+
+El filtro `id=eq.45` lo resuelve la base de datos, así que la respuesta trae un array con un único producto. El script toma ese primer elemento y completa la página.
+
+### Qué se completa en el DOM
+
+Cuando llega la respuesta, `js/detalle.js` actualiza:
+
+- el `<title>` de la pestaña y el `<h1>` con el nombre del producto;
+- la imagen principal (`src` y `alt`) dentro de `.detalle-imagen`;
+- la categoría en la etiqueta `.tag-categoria`;
+- la descripción detallada;
+- el precio formateado en pesos argentinos con `Intl.NumberFormat('es-AR')`;
+- las filas de la ficha técnica: categoría, estado de oferta, garantía oficial y código de producto.
+
+Todos los textos que vienen de Supabase pasan por `escaparHTML()` antes de insertarse en el HTML, igual que en el catálogo, para evitar inyecciones de código (XSS). Además, el `id` se valida y se codifica con `encodeURIComponent()` antes de armar la consulta.
+
+### Si no hay `id` o el producto no existe
+
+Si alguien entra a `detalle-producto.html` sin parámetros, la página no se rompe: muestra un mensaje amigable indicando que no se seleccionó ningún producto. Lo mismo pasa si el `id` no es válido, si Supabase falla o si el producto ya no existe.
+
+En todos los casos, el botón **"← Volver al catálogo"** lleva a `catalogo.html` para que la persona pueda elegir otro producto.
+
+### Botón "Agregar al carrito"
+
+El botón mantiene la clase `.btn-comprar` y el enlace a `carrito.html`. Además, al cargar el producto se le agregan atributos `data-id`, `data-nombre`, `data-precio` y `data-categoria` con los datos reales. Esos atributos quedan preparados para que, más adelante, el carrito pueda leer qué producto se quiere agregar sin modificar la estructura de la página.
