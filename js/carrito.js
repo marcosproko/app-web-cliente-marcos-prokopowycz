@@ -40,17 +40,27 @@
   }
 
   /**
+   * Redondea a 2 decimales para evitar desbordes de precisión de coma flotante.
+   */
+  function redondearADosDecimales(valor) {
+    const numero = Number(valor);
+    return Number.isFinite(numero) ? Math.round((numero + Number.EPSILON) * 100) / 100 : 0;
+  }
+
+  /**
    * Calcula el monto final sumando precio * cantidad con reduce().
    */
   function calcularTotal(carrito) {
-    return (Array.isArray(carrito) ? carrito : []).reduce(
-      (total, producto) => {
+    const total = (Array.isArray(carrito) ? carrito : []).reduce(
+      (acumulado, producto) => {
         const precio = normalizarPrecio(producto && producto.precio);
         const cantidad = Number(producto && producto.cantidad) || 0;
-        return total + precio * cantidad;
+        return acumulado + redondearADosDecimales(precio * cantidad);
       },
       0
     );
+
+    return redondearADosDecimales(total);
   }
 
   /**
@@ -69,7 +79,7 @@
 
   function normalizarPrecio(valor) {
     if (typeof valor === 'number') {
-      return Number.isFinite(valor) ? valor : 0;
+      return Number.isFinite(valor) ? redondearADosDecimales(valor) : 0;
     }
 
     const texto = String(valor ?? '').trim();
@@ -78,13 +88,27 @@
       return 0;
     }
 
-    // Acepta formatos como "1.599.000", "$ 1.599.000" o "1599,50".
-    const limpio = texto
-      .replace(/[^\d,.-]/g, '')
-      .replace(/\./g, '')
-      .replace(',', '.');
+    // Solo conservamos dígitos, signo, comas y puntos para descartar
+    // símbolos de moneda, espacios y separadores de miles no numéricos.
+    let limpio = texto.replace(/[^\d,.-]/g, '');
 
-    return Number(limpio) || 0;
+    if (!limpio) {
+      return 0;
+    }
+
+    if (limpio.includes(',')) {
+      // Formato con coma decimal, por ejemplo "$ 1.599,50".
+      // Los puntos son separadores de miles y la coma pasa a ser el decimal.
+      limpio = limpio.replace(/\./g, '').replace(',', '.');
+    } else if ((limpio.match(/\./g) || []).length > 1) {
+      // Formato "1.599.000": todos los puntos son separadores de miles.
+      limpio = limpio.replace(/\./g, '');
+    }
+
+    // Con un único punto (o ninguno) se respeta el texto tal cual para que
+    // parseFloat() lea el decimal real, por ejemplo "1599.50" => 1599.5.
+    const numero = parseFloat(limpio);
+    return Number.isFinite(numero) ? redondearADosDecimales(numero) : 0;
   }
 
   function formatearPrecio(precio) {
@@ -92,7 +116,7 @@
       style: 'currency',
       currency: 'ARS',
       minimumFractionDigits: 0,
-      maximumFractionDigits: 0
+      maximumFractionDigits: 2
     }).format(Number(precio) || 0);
   }
 
@@ -236,9 +260,9 @@
     const id = escaparHTML(producto.id);
     const nombre = escaparHTML(producto.nombre || 'Producto');
     const categoria = escaparHTML(producto.categoria || '');
-    const precio = Number(producto.precio) || 0;
+    const precio = normalizarPrecio(producto.precio);
     const cantidad = Math.max(1, Math.floor(Number(producto.cantidad) || 1));
-    const subtotal = precio * cantidad;
+    const subtotal = redondearADosDecimales(precio * cantidad);
 
     const miniatura = producto.imagen
       ? `<img
@@ -346,7 +370,9 @@
 
     function abrirModal(total) {
       if (!modal) {
-        window.alert(`¡Compra realizada con éxito! Total abonado: ${formatearPrecio(total)}`);
+        window.alert(
+          `¡Simulación de compra completada con éxito! (Pedido simulado en entorno de pruebas) Total simulado: ${formatearPrecio(total)}`
+        );
         return;
       }
 

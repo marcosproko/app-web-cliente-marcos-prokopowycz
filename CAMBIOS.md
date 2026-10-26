@@ -381,3 +381,44 @@ using (true);
 ```
 
 En un sitio real esas políticas no deberían quedar abiertas a cualquiera: lo correcto es agregar autenticación, restringir el panel a usuarios administradores y escribir políticas que validen el rol. Para esta entrega académica alcanza con dejar documentado el requisito y mantener la clave **anon** en el frontend, sin exponer nunca la `service_role`.
+
+## 11. Robustez numérica, estados de red y transparencia de alcance
+
+### 11.1. Parseo seguro de precios con coma o punto decimal
+
+En `js/carrito.js` se reescribió `normalizarPrecio()` para interpretar correctamente los precios sin importar el formato con el que lleguen:
+
+- si el valor ya es un número finito, se usa directamente;
+- si llega como texto, se limpian primero los símbolos de moneda, espacios y caracteres no numéricos;
+- cuando el texto contiene una coma, se asume el formato local `es-AR`: los puntos se eliminan porque son separadores de miles y la coma se reemplaza por un punto decimal. Así `"$ 1.599,50"` se convierte en `1599.50`;
+- cuando hay varios puntos, como `"1.599.000"`, se eliminan todos porque se interpretan como separadores de miles;
+- cuando no hay coma y hay un único punto, como `"1599.50"`, el texto se deja intacto y se usa `parseFloat()` directamente, sin borrar el separador decimal.
+
+De esta forma se evita el error anterior de aplicar `replace('.', '')` a secas, que podía convertir `1599.50` en `159950` y multiplicar el valor real por 100.
+
+Además se agregó `redondearADosDecimales()`, que aplica `Math.round((valor + Number.EPSILON) * 100) / 100`. Se usa al normalizar cada precio, al calcular el subtotal de cada fila (`precio * cantidad`) y al cerrar el `reduce()` de `calcularTotal()`, de modo que la suma final no arrastre desbordes de coma flotante. Los formateadores de `js/carrito.js`, `js/app.js` y `js/catalogo.js` ahora permiten hasta dos decimales para mostrar los centavos cuando existan, sin agregar `,00` innecesarios a los precios enteros.
+
+### 11.2. Estados de carga y error en la portada
+
+`js/app.js` dejó de mostrar las secciones de ofertas y novedades vacías mientras esperaba la respuesta de Supabase. Al iniciar `obtenerProductos()` se ejecuta `prepararCargaPortada()`, que:
+
+- hace visibles `#seccion-ofertas` y `#seccion-nuevos`;
+- oculta el bloque de "sin resultados";
+- inyecta un indicador `Cargando productos...` con `role="status"` dentro de `#ofertas-grid` y `#nuevos-grid`.
+
+Si el `fetch` falla, si la respuesta HTTP no es `ok` o si ocurre cualquier excepción, el `catch` llama a `mostrarErrorCargaProductos()`. Esa función reemplaza el contenido de ambas grillas por un mensaje visible con `role="alert"`:
+
+> No pudimos conectar con el catálogo en este momento. Intente más tarde.
+
+El aviso usa la clase `.alerta-error` (fondo rojo oscuro, borde y texto claros) para que no queden secciones vacías ni se muestre el texto engañoso "Producto no disponible" cuando en realidad hubo un problema de conexión. `js/catalogo.js` aplica el mismo criterio en su `catch`, inyectando el aviso en `#grid-inventario` además de actualizar el estado del catálogo.
+
+### 11.3. Accesibilidad y feedback honesto
+
+- Los enlaces "Ver detalle" de `js/app.js` y "Detalle" de `js/catalogo.js` ahora incluyen `aria-label="Ver detalle de <nombre del producto>"`, de modo que un lector de pantalla anuncia qué ficha se va a abrir en lugar de repetir un texto genérico.
+- En `contact.html` se verificó y mantuvo el contenedor `#mensaje-exito` con `role="status"` y `aria-live="polite"`, y se agregó `aria-atomic="true"` para que el mensaje de confirmación completo se anuncie automáticamente al enviar el formulario.
+- El modal de finalización de compra de `carrito.html` y el `alert()` de respaldo de `js/carrito.js` ahora aclaran explícitamente que se trata de una simulación: **"¡Simulación de compra completada con éxito! (Pedido simulado en entorno de pruebas)"**. También se reemplazó "Total abonado" por "Total simulado" para no dar a entender que hubo un cobro real.
+- En `admin.html` se agregó un aviso visible en la cabecera del panel: **"Entorno de prueba pedagógico / Demostración de Backoffice CRUD (sin capa de autenticación por alcance curricular)"**, con la clase `.admin-aviso` en tono ámbar. Así queda claro que la ausencia de autenticación es una decisión de alcance académico y no un descuido del frontend.
+
+### 11.4. Estilos para estados vacíos
+
+En `style.css` se agregó la regla `.sin-resultados` con fondo `#1e293b`, borde redondeado, padding amplio, sombra y texto claro centrado, en línea con la estética dark/gamer del sitio. Se usa tanto en el bloque de búsqueda sin coincidencias de `index.html` como en el catálogo cuando una categoría no tiene productos. También se sumaron `.cargando-productos` (estado de carga con borde punteado) y `.alerta-error` (alerta de conexión con fondo rojo oscuro y borde visible).

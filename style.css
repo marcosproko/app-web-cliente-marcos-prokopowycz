@@ -495,6 +495,80 @@ main {
   font-size: 0.9rem;
 }
 
+/* Estados de carga, error y búsquedas sin resultados */
+.sin-resultados {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  padding: 2.5rem 1.5rem;
+  background-color: #1e293b;
+  border: 1px solid #334155;
+  border-radius: var(--radio-borde);
+  box-shadow: var(--sombra-card);
+  color: #e2e8f0;
+  text-align: center;
+}
+
+.sin-resultados p {
+  color: #f8fafc;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.sin-resultados button {
+  padding: 0.6rem 1.2rem;
+  background-color: var(--color-primario);
+  border: none;
+  border-radius: 6px;
+  color: #0a0a0c;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 800;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.sin-resultados button:hover {
+  background-color: var(--color-primario-hover);
+  transform: translateY(-1px);
+}
+
+.sin-resultados button:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+.cargando-productos {
+  grid-column: 1 / -1;
+  padding: 2rem 1.5rem;
+  background-color: #16161a;
+  border: 1px dashed #334155;
+  border-radius: var(--radio-borde);
+  color: var(--color-muted);
+  font-weight: 600;
+  text-align: center;
+}
+
+.alerta-error {
+  grid-column: 1 / -1;
+  margin: 1.5rem 0;
+  padding: 1.2rem 1.4rem;
+  background-color: #2a0f12;
+  border: 1px solid #ef4444;
+  border-radius: var(--radio-borde);
+  box-shadow: var(--sombra-card);
+  color: #fca5a5;
+  font-weight: 600;
+  line-height: 1.5;
+  text-align: center;
+}
+
 .grid-inventario {
  display : grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -1380,6 +1454,18 @@ footer {
 
 .admin-encabezado p {
   color: var(--color-muted);
+}
+
+.admin-aviso {
+  margin-top: 0.85rem;
+  padding: 0.8rem 1rem;
+  background-color: #2a210d;
+  border: 1px solid #f59e0b;
+  border-radius: 8px;
+  color: #fcd34d;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.5;
 }
 
 .admin-form-panel h2 {
