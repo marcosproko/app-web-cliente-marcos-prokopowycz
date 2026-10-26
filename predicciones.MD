@@ -44,4 +44,5 @@
 ## 16. Limpieza de Inicio y Catálogo Dinámico con Supabase
 - Predicción: Espero remover la sección redundante de 'Explorá por Categorías' en index.html para simplificar la vista principal. En Catalogo.html vincularé la llamada asíncrona a la API de Supabase para obtener la totalidad de los productos y renderizarlos en la grilla (.grid-inventario) con tarjetas compactas (.card-compacta). Asimismo, implementaré el filtrado real por categoría mediante el método filter() de JavaScript para que, al presionar un botón de categoría, la interfaz muestre exclusivamente los artículos pertenecientes a dicho rubro sin depender de anclas de scroll estáticas.
 
-
+## 17. Corrección de Enlaces 404, Submit del Buscador y Parpadeo de Portada
+- Predicción: Espero prevenir la recarga involuntaria de index.html al presionar Enter en el formulario del buscador mediante event.preventDefault(), limpiar los arrays estáticos de app.js para evitar el parpadeo inicial frente a Supabase, estandarizar las rutas a catalogo.html en minúsculas para prevenir errores 404 en Linux y restaurar el efecto hover de elevación en las tarjetas resolviendo el conflicto de transform con las animaciones de carga.
