@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Catálogo Completo | WOL Hardware</title>
     <link rel="stylesheet" href="style.css" />
+    <script src="js/carrito.js" defer></script>
     <script src="js/catalogo.js" defer></script>
   </head>
   <body>
@@ -14,8 +15,13 @@
       <nav aria-label="Navegación principal">
         <ul class="nav-centrado">
           <li><a href="index.html">Inicio</a></li>
-          <li><a href="Catalogo.html" class="nav-activo">Catálogo</a></li>
-          <li><a href="carrito.html">Carrito</a></li>
+          <li><a href="catalogo.html" class="nav-activo">Catálogo</a></li>
+          <li>
+            <a href="carrito.html" class="nav-carrito">
+              Carrito
+              <span class="carrito-contador" data-carrito-contador>0</span>
+            </a>
+          </li>
           <li><a href="contact.html">Contacto</a></li>
         </ul>
       </nav>

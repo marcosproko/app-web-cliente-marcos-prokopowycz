@@ -15,9 +15,9 @@ En `js/app.js` saqué las referencias a esa sección y los listeners de los chip
 
 Gracias a esa limpieza, el buscador, "Ofertas Semanales" y "Nuevos Ingresos" siguen funcionando normalmente y no se rompen por intentar acceder a elementos que ya no están en el HTML.
 
-## 2. Cómo quedó conectado `Catalogo.html` con Supabase
+## 2. Cómo quedó conectado `catalogo.html` con Supabase
 
-Creé un archivo nuevo, `js/catalogo.js`, y lo vinculé desde `Catalogo.html` con `defer`.
+Creé un archivo nuevo, `js/catalogo.js`, y lo vinculé desde `catalogo.html` con `defer`.
 
 Ese script usa la misma URL y la misma clave anon (JWT) de Supabase que ya usaba el inicio. Hace un `fetch` asíncrono contra la API REST:
 
@@ -97,3 +97,111 @@ Ahora la animación mueve la propiedad `translate` en lugar de `transform`. Al t
 ### Enlaces del pie de página
 
 En `contact.html` se agregaron las secciones con los ids `#preguntas-frecuentes`, `#envios` y `#terminos`, cada una con un texto breve. También se actualizaron los enlaces del footer en todas las páginas para que apunten a `contact.html#preguntas-frecuentes` y no queden enlaces muertos.
+
+## 7. Carrito de compras persistente con localStorage
+
+### 7.1. Un único módulo central: `js/carrito.js`
+
+Toda la lógica del carrito vive en `js/carrito.js`, que se carga con `defer` en `index.html`, `catalogo.html`, `detalle-producto.html`, `carrito.html` y `contact.html` (para que el contador del menú también se actualice en esa vista). Al ejecutarse expone funciones globales reutilizables:
+
+- `agregarAlCarrito(producto)`;
+- `obtenerCarrito()`;
+- `guardarCarrito(carrito)`;
+- `calcularTotal(carrito)`;
+- `actualizarContadorNav()`.
+
+El estado se guarda en `localStorage` bajo la clave `carrito_wol`. El formato es siempre un array de objetos:
+
+```js
+[
+  {
+    id: 45,
+    nombre: "Placa de video ASUS RTX 4070",
+    precio: 1199250,
+    imagen: "assets/img/4070.jpg",
+    categoria: "Placas de Video",
+    cantidad: 1
+  }
+]
+```
+
+### 7.2. Persistencia: `JSON.stringify` y `JSON.parse`
+
+`localStorage` solamente puede guardar texto, no objetos de JavaScript. Por eso:
+
+- al guardar, `guardarCarrito()` usa `JSON.stringify(carrito)` y escribe el resultado con `localStorage.setItem('carrito_wol', ...)`;
+- al leer, `obtenerCarrito()` usa `localStorage.getItem('carrito_wol')` y convierte el texto de vuelta a un array con `JSON.parse(...)`.
+
+Si la clave no existe, si el contenido está vacío o si el JSON guardado está dañado, `obtenerCarrito()` devuelve `[]` para que la aplicación nunca se rompa. La lectura y la escritura están envueltas en `try/catch` por ese motivo.
+
+`agregarAlCarrito()` primero busca si el producto ya está en el array comparando los `id` como texto. Si existe, incrementa su `cantidad`; si no existe, agrega el objeto completo con `cantidad: 1`. Después guarda el array actualizado y dispara el evento personalizado `carrito-actualizado` sobre `document`, cuyo `detail` incluye el carrito y el total calculado.
+
+### 7.3. Cálculo del total con `reduce()`
+
+El monto final no se guarda en el storage: se calcula siempre a partir de los datos actuales. Para eso `calcularTotal()` usa `reduce()`:
+
+```js
+function calcularTotal(carrito) {
+  return carrito.reduce(
+    (total, producto) => total + producto.precio * producto.cantidad,
+    0
+  );
+}
+```
+
+Cada iteración suma el subtotal del producto (`precio * cantidad`) al acumulador `total`, que arranca en `0`. Así el total siempre coincide con lo que se muestra en la tabla, incluso después de sumar, restar o eliminar unidades.
+
+El contador del menú se obtiene de la misma forma, pero sumando solamente las cantidades con otro `reduce()`. `actualizarContadorNav()` busca el enlace a `carrito.html` dentro del `<header>`, actualiza el badge `.carrito-contador` y refresca su `aria-label` para que el número también sea comprensible con lector de pantalla.
+
+### 7.4. Cómo se agregan productos desde las vistas
+
+En `index.html` y `catalogo.html` las tarjetas se generan dinámicamente desde Supabase. Los botones "Agregar al carrito" y "Agregar" ya no son enlaces que recargan la página: son `<button type="button">` con atributos `data-*` que describen el producto:
+
+```html
+<button
+  type="button"
+  class="btn-comprar"
+  data-agregar-carrito
+  data-id="45"
+  data-nombre="Placa de video ASUS RTX 4070"
+  data-precio="1199250"
+  data-imagen="assets/img/4070.jpg"
+  data-categoria="Placas de Video"
+>
+  Agregar al carrito
+</button>
+```
+
+`js/carrito.js` escucha los clics mediante delegación de eventos: busca el ancestro con `data-agregar-carrito`, lee sus atributos con `dataset`, arma el objeto y llama a `agregarAlCarrito()`. Esto funciona tanto con las tarjetas que se crean después de consultar la API como con el botón fijo de `detalle-producto.html`. Después muestra una notificación visual breve con el texto "Producto agregado al carrito".
+
+### 7.5. Renderizado de `carrito.html`
+
+La tabla ya no tiene filas escritas a mano. Su `<tbody>` arranca vacío y lo completa `js/carrito.js` leyendo el storage. Por cada producto se genera una fila con:
+
+- miniatura de la imagen;
+- nombre y categoría;
+- precio unitario formateado en pesos con `Intl.NumberFormat('es-AR', { currency: 'ARS' })`;
+- controles de cantidad `−`, el número y `+`;
+- subtotal (`precio * cantidad`);
+- botón para eliminar el producto.
+
+Los controles usan delegación de eventos en el `<tbody>`: cada botón tiene `data-accion` (`sumar`, `restar` o `eliminar`) y `data-id`. Al hacer clic se modifica el array, se guarda en localStorage y se vuelve a renderizar la tabla. Si la cantidad llega a cero al restar, el producto se elimina automáticamente.
+
+El total del `<tfoot>` se actualiza con `calcularTotal()`. Si el carrito no tiene productos, la tabla se oculta y aparece un bloque amigable con el mensaje **"Tu carrito está vacío"** y un botón **"Explorar catálogo"** que lleva a `catalogo.html`. En ese estado también se ocultan los botones de vaciar y finalizar.
+
+### 7.6. Vaciar y finalizar compra
+
+- **Vaciar carrito** elimina la clave `carrito_wol` de `localStorage`, vuelve a renderizar el estado vacío, actualiza el contador del menú y dispara `carrito-actualizado`.
+- **Finalizar compra** calcula el total, borra el carrito, muestra el estado vacío y abre un modal accesible con el mensaje de éxito y el total abonado. El modal se puede cerrar con el botón, con un clic en el fondo o con la tecla `Escape`; al cerrarse devuelve el foco al elemento que lo abrió.
+
+### 7.7. Estilos y accesibilidad
+
+En `style.css` se agregaron:
+
+- el badge circular `.carrito-contador`, cian cuando no hay unidades y rojo cuando hay productos, con texto oscuro o blanco para mantener el contraste;
+- estilos para las miniaturas, los controles de cantidad y el botón de eliminar, con estados `:hover` y `:focus-visible`;
+- un contenedor con `overflow-x: auto` para que la tabla se pueda desplazar horizontalmente en pantallas chicas sin romper el layout;
+- estilos para el bloque de carrito vacío, la notificación breve y el modal de confirmación;
+- ajustes responsive para que los botones de acción se apilen en celulares y la notificación ocupe el ancho disponible.
+
+Además se agregó una regla global `[hidden] { display: none !important; }` para que los elementos que se muestran u ocultan desde JavaScript no queden visibles por culpa de otros `display` definidos en CSS.
