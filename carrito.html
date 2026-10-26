@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Carrito de Compras | WOL Hardware</title>
     <link rel="stylesheet" href="style.css" />
+    <script src="js/carrito.js" defer></script>
   </head>
   <body>
     <header class="header-centrado">
@@ -12,8 +13,13 @@
       <nav aria-label="Navegación principal">
         <ul class="nav-centrado">
           <li><a href="index.html">Inicio</a></li>
-          <li><a href="Catalogo.html">Catálogo</a></li>
-          <li><a href="carrito.html">Carrito</a></li>
+          <li><a href="catalogo.html">Catálogo</a></li>
+          <li>
+            <a href="carrito.html" class="nav-carrito nav-activo" aria-current="page">
+              Carrito
+              <span class="carrito-contador" data-carrito-contador>0</span>
+            </a>
+          </li>
           <li><a href="contact.html">Contacto</a></li>
         </ul>
       </nav>
@@ -23,48 +29,79 @@
       <section aria-label="Carrito de compras" class="contenedor-carrito">
         <h2>🛒 Carrito de Compras</h2>
 
-        <table class="tabla-carrito">
-          <caption>
-            Resumen de los productos seleccionados para la compra
-          </caption>
-          <thead>
-            <tr>
-              <th scope="col">Producto</th>
-              <th scope="col">Precio unitario</th>
-              <th scope="col">Cantidad</th>
-              <th scope="col">Subtotal</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Placa de video ASUS RTX 4070</td>
-              <td>$1.599.000</td>
-              <td>1</td>
-              <td>$1.599.000</td>
-            </tr>
-            <tr>
-              <td>Memoria RAM Corsair DDR5</td>
-              <td>$549.000</td>
-              <td>2</td>
-              <td>$1.098.000</td>
-            </tr>
-          </tbody>
-          <tfoot>
-            <tr>
-              <th scope="row" colspan="3">Total final estimado:</th>
-              <td class="total-monto">$2.697.000</td>
-            </tr>
-          </tfoot>
-        </table>
+        <div class="tabla-carrito-contenedor">
+          <table class="tabla-carrito" id="tabla-carrito" hidden>
+            <caption>
+              Resumen de los productos seleccionados para la compra
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Producto</th>
+                <th scope="col">Precio unitario</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">Subtotal</th>
+                <th scope="col">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="carrito-tbody"></tbody>
+            <tfoot>
+              <tr>
+                <th scope="row" colspan="4">Total final estimado:</th>
+                <td class="total-monto" id="carrito-total">$0</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
 
-        <div class="carrito-acciones">
-          <button type="button" class="btn-vaciar">Vaciar carrito</button>
-          <button type="button" class="btn-comprar">
-            Iniciar compra final →
+        <div id="carrito-vacio" class="carrito-vacio" role="status" hidden>
+          <span class="carrito-vacio-icono" aria-hidden="true">🛒</span>
+          <h3>Tu carrito está vacío</h3>
+          <p>
+            Todavía no agregaste productos. Recorré el catálogo y encontrá el
+            hardware que estás buscando.
+          </p>
+          <a href="catalogo.html" class="btn-comprar carrito-vacio-btn">
+            Explorar catálogo
+          </a>
+        </div>
+
+        <div class="carrito-acciones" id="carrito-acciones" hidden>
+          <button type="button" class="btn-vaciar" id="btn-vaciar-carrito">
+            Vaciar carrito
+          </button>
+          <button type="button" class="btn-comprar" id="btn-finalizar-compra">
+            Finalizar compra
           </button>
         </div>
       </section>
     </main>
+
+    <div
+      class="modal-carrito"
+      id="modal-compra"
+      role="presentation"
+      hidden
+    >
+      <div class="modal-carrito-fondo" data-cerrar-modal></div>
+      <div
+        class="modal-carrito-contenido"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-compra-titulo"
+        aria-describedby="modal-compra-descripcion"
+      >
+        <span class="modal-carrito-icono" aria-hidden="true">✅</span>
+        <h3 id="modal-compra-titulo">¡Compra realizada con éxito!</h3>
+        <p id="modal-compra-descripcion">
+          Total abonado:
+          <strong id="modal-compra-total">$0</strong>. Gracias por confiar en WOL
+          Hardware.
+        </p>
+        <button type="button" class="btn-comprar" data-cerrar-modal>
+          Cerrar
+        </button>
+      </div>
+    </div>
 
     <footer>
       <div class="footer-links">

@@ -50,7 +50,18 @@ function crearTarjetaProducto(producto) {
     <p>${escaparHTML(producto.descripcion)}</p>
     ${precioHTML}
     <a href="${escaparHTML(producto.enlaceDetalle)}" class="btn-detalle">Ver detalle →</a>
-    <a href="${escaparHTML(producto.enlaceCarrito)}" class="btn-comprar">Agregar al carrito 🛒</a>
+    <button
+      type="button"
+      class="btn-comprar"
+      data-agregar-carrito
+      data-id="${escaparHTML(producto.id)}"
+      data-nombre="${escaparHTML(producto.nombre)}"
+      data-precio="${Number(producto.precio) || 0}"
+      data-imagen="${escaparHTML(producto.imagen)}"
+      data-categoria="${escaparHTML(producto.categoria)}"
+    >
+      Agregar al carrito 🛒
+    </button>
   `;
 
   return article;
@@ -165,8 +176,7 @@ async function obtenerProductos() {
       oferta: Boolean(p.oferta),
       badge: p.oferta ? "-25% OFF" : "NUEVO",
       badgeClass: p.oferta ? "badge-oferta" : "badge-nuevo",
-      enlaceDetalle: `detalle-producto.html?id=${encodeURIComponent(p.id)}`,
-      enlaceCarrito: "carrito.html"
+      enlaceDetalle: "detalle-producto.html"
     }));
 
     todosLosProductos = productosAdaptados;

@@ -95,8 +95,19 @@ function crearTarjetaCompacta(producto) {
     <p>${escaparHTML(producto.descripcion)}</p>
     <p class="precio">${formatearPrecio(producto.precio)}</p>
     <div class="card-acciones">
-      <a href="detalle-producto.html?id=${encodeURIComponent(producto.id)}" class="btn-detalle">Detalle</a>
-      <a href="carrito.html" class="btn-comprar">Agregar</a>
+      <a href="detalle-producto.html" class="btn-detalle">Detalle</a>
+      <button
+        type="button"
+        class="btn-comprar"
+        data-agregar-carrito
+        data-id="${escaparHTML(producto.id)}"
+        data-nombre="${escaparHTML(producto.nombre)}"
+        data-precio="${Number(producto.precio) || 0}"
+        data-imagen="${escaparHTML(producto.imagen)}"
+        data-categoria="${escaparHTML(producto.categoria)}"
+      >
+        Agregar
+      </button>
     </div>
   `;
 
