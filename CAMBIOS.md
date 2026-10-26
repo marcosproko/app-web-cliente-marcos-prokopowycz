@@ -253,3 +253,131 @@ Math.round(((precioOriginal - precio) / precioOriginal) * 100)
 ```
 
 El resultado se muestra en el badge como `-${descuento}% OFF` en lugar del valor fijo anterior. Si un producto está marcado como oferta pero no tiene un precio original válido, el badge muestra "OFERTA" como respaldo.
+
+## 9. Backoffice / Gestión de Productos (`admin.html`)
+
+### 9.1. Arquitectura del panel
+
+Se agregó una vista administrativa nueva, `admin.html`, que reutiliza la misma cabecera, el logo **WOL**, el `<nav>` principal y el pie de página del resto del sitio. El enlace **Admin** queda marcado con `aria-current="page"` y la clase `.link-activo`, así se ve como la sección actual y también lo detectan los lectores de pantalla.
+
+La página se divide en dos bloques:
+
+1. **Alta de productos**: un formulario accesible `#form-nuevo-producto` con los campos nombre, categoría, precio, precio original/listado, URL de imagen, descripción y un switch de oferta.
+2. **Inventario**: una tabla `.tabla-admin` con las columnas Miniatura, Nombre, Categoría, Precio y Acciones.
+
+La lógica está separada por completo del HTML en `js/admin.js`, vinculado con `defer` para que el DOM esté disponible antes de ejecutarse. El script reutiliza las constantes `SUPABASE_URL` y `SUPABASE_KEY` con la URL del proyecto y la clave **anon** pública de Supabase.
+
+### 9.2. Listado: `GET` a la API REST
+
+La función `listarProductosAdmin()` consulta:
+
+```js
+`${SUPABASE_URL}/rest/v1/Productos?select=*&order=id.desc`
+```
+
+- `select=*` trae todas las columnas de cada producto.
+- `order=id.desc` muestra primero los productos más nuevos, que son los que interesan en un backoffice.
+- Se envía con `method: 'GET'` y los encabezados `apikey` y `Authorization: Bearer <anon>`.
+
+El resultado se recorre y se arma una fila por producto. Todos los textos que vienen de la base pasan por `escaparHTML()` antes de insertarse con `innerHTML`, de modo que un nombre o una descripción con `<`, `>` o comillas no pueda romper la tabla ni inyectar HTML. Los precios se formatean con `Intl.NumberFormat('es-AR', { currency: 'ARS' })`. Si la tabla está vacía se muestra una fila informativa con `colspan="5"`; si falla la conexión se muestra un mensaje de error y el detalle queda en la consola.
+
+### 9.3. Alta: método `POST`
+
+El formulario escucha el evento `submit` y lo intercepta con `e.preventDefault()` para que el navegador no recargue la página. Después:
+
+1. valida los campos con `checkValidity()` y `reportValidity()`;
+2. lee los valores con `FormData`;
+3. convierte `precio` y `precioOriginal` a número;
+4. arma el objeto JSON con las columnas de la tabla: `nombre`, `categoria`, `precio`, `imagen`, `descripcion` y `oferta` (booleano). `precioOriginal` solo se incluye si el usuario cargó un valor, porque es opcional;
+5. envía el `fetch()` a `${SUPABASE_URL}/rest/v1/Productos`.
+
+La petición usa `method: 'POST'` y este conjunto de cabeceras:
+
+```js
+headers: {
+  apikey: SUPABASE_KEY,
+  Authorization: `Bearer ${SUPABASE_KEY}`,
+  'Content-Type': 'application/json',
+  Prefer: 'return=representation'
+}
+```
+
+- **`apikey`**: identifica el proyecto de Supabase.
+- **`Authorization: Bearer <anon>`**: autoriza la operación con la clave pública; los permisos reales dependen de las políticas RLS configuradas en Supabase.
+- **`Content-Type: application/json`**: le indica a la API que el cuerpo es JSON, imprescindible para que se parsee correctamente.
+- **`Prefer: return=representation`**: hace que Supabase devuelva el registro insertado en la respuesta, útil para confirmar el alta y conocer el `id` generado.
+
+En el `<select>` de categorías, la opción visible **"Coolers / Refrigeración"** guarda el valor `Refrigeración` para que coincida con las categorías existentes y con el filtro de `catalogo.html`.
+
+Si el esquema de la base todavía no tiene la columna opcional `precioOriginal`, Supabase responde con un error `400`. Para que el alta no se bloquee por un dato opcional, el script detecta ese caso y reintenta el `POST` sin `precioOriginal`; en ese caso muestra un aviso ámbar explicando que el producto se guardó pero sin el precio de lista.
+
+Mientras se envía la petición el botón **Guardar Producto** queda deshabilitado con el texto "Guardando..." para evitar envíos duplicados. Si la respuesta es `ok`, se resetea el formulario, se muestra un mensaje verde de éxito con `role="status"` y `aria-live="polite"`, y se vuelve a llamar a `listarProductosAdmin()` para que el producto aparezca en la tabla. Si falla, se muestra un mensaje rojo y el error se registra en la consola.
+
+### 9.4. Baja: método `DELETE`
+
+La eliminación usa **delegación de eventos** sobre el `<tbody>`: un único listener escucha los clics y detecta el botón `.btn-danger` con el atributo `data-eliminar`. Antes de borrar se muestra un `window.confirm()` nativo con el nombre del producto, para evitar eliminaciones accidentales.
+
+Si el usuario confirma, se envía:
+
+```js
+fetch(`${SUPABASE_URL}/rest/v1/Productos?id=eq.${encodeURIComponent(id)}`, {
+  method: 'DELETE',
+  headers: {
+    apikey: SUPABASE_KEY,
+    Authorization: `Bearer ${SUPABASE_KEY}`,
+    Prefer: 'return=minimal'
+  }
+});
+```
+
+El filtro `?id=eq.${id}` es la sintaxis de PostgREST para indicar "donde `id` es igual a este valor". El identificador se codifica con `encodeURIComponent()` para que no pueda alterar la URL. `Prefer: return=minimal` evita que Supabase devuelva el cuerpo del registro borrado, ya que el frontend no lo necesita.
+
+La fila se quita del DOM cuando llega una respuesta HTTP `ok` y después se refresca la tabla con `listarProductosAdmin()` para mantener el orden y el contador actualizados. Si la respuesta no es `ok`, se conserva la fila, se restaura el botón y se muestra un mensaje de error.
+
+### 9.5. Estilos del backoffice
+
+En `style.css` se agregó un bloque exclusivo para `admin.html`:
+
+- los paneles usan fondo `#0f172a`, borde azulado y la sombra de las tarjetas del sitio;
+- el formulario usa CSS Grid de dos columnas que pasa a una sola columna en pantallas de hasta 700 px;
+- los inputs, selects y textareas tienen fondo oscuro, borde `#334155` y foco cian con `box-shadow` y `outline` para que el indicador sea visible también con teclado;
+- el switch de oferta se construye con un checkbox real oculto visualmente y un control estilizado, manteniendo el foco visible y el atributo `role="switch"`;
+- la tabla administrativa queda dentro de `.tabla-admin-contenedor` con `overflow-x: auto`, de modo que en celulares se pueda desplazar horizontalmente sin romper el layout;
+- las miniaturas tienen fondo blanco y `object-fit: contain` para no deformar las imágenes;
+- los productos en oferta muestran un badge rojo `.badge-admin-oferta` y, si tienen precio original, se muestra tachado debajo del precio actual;
+- el botón de baja usa la clase `.btn-danger` con fondo `#ef4444`, hover más oscuro y estados `:focus-visible` y `:disabled`.
+
+### 9.6. Cómo probar el flujo completo
+
+1. Abrir `admin.html` desde el navegador (o con Live Server).
+2. Verificar que la tabla cargue los productos existentes en orden descendente por `id`.
+3. Completar el formulario y presionar **Guardar Producto**; debería aparecer el mensaje de éxito y la fila nueva arriba de la tabla.
+4. Confirmar que el producto se vea también en `catalogo.html`.
+5. Presionar **Eliminar** sobre una fila, aceptar el `confirm()` y comprobar que la fila desaparezca y que el producto ya no esté en la tienda.
+
+### 9.7. Requisito de políticas RLS en Supabase
+
+La clave **anon** no saltea las políticas de seguridad a nivel de fila (RLS). Con la configuración actual del proyecto, la lectura funciona, pero un `POST` válido devuelve:
+
+```json
+{
+  "code": "42501",
+  "message": "new row violates row-level security policy for table \"Productos\""
+}
+```
+
+Eso significa que la tabla tiene RLS activo y que no existe una política que permita `INSERT` (y probablemente tampoco `DELETE`) para el rol `anon`. Para que el backoffice pueda dar de alta y eliminar productos hay que crear las políticas correspondientes en Supabase, por ejemplo desde **Authentication → Policies** o con SQL:
+
+```sql
+create policy "Permitir alta desde el backoffice"
+on "Productos" for insert
+to anon
+with check (true);
+
+create policy "Permitir baja desde el backoffice"
+on "Productos" for delete
+to anon
+using (true);
+```
+
+En un sitio real esas políticas no deberían quedar abiertas a cualquiera: lo correcto es agregar autenticación, restringir el panel a usuarios administradores y escribir políticas que validen el rol. Para esta entrega académica alcanza con dejar documentado el requisito y mantener la clave **anon** en el frontend, sin exponer nunca la `service_role`.

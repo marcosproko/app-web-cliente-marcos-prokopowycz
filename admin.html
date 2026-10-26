@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panel de Administración | WOL Hardware</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="js/carrito.js" defer></script>
+    <script src="js/admin.js" defer></script>
+  </head>
+  <body>
+    <!-- Header con la misma estructura que el resto de las vistas -->
+    <header class="header-centrado">
+      <a class="logo" href="index.html" aria-label="WOL Hardware - Inicio">WOL</a>
+      <nav aria-label="Navegación principal">
+        <ul class="nav-centrado">
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="catalogo.html">Catálogo</a></li>
+          <li>
+            <a href="carrito.html" class="nav-carrito">
+              Carrito
+              <span class="carrito-contador" data-carrito-contador>0</span>
+            </a>
+          </li>
+          <li><a href="contact.html">Contacto</a></li>
+          <li>
+            <a href="admin.html" class="link-activo" aria-current="page">Admin</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <!-- Alta de productos -->
+      <section class="admin-seccion" aria-labelledby="admin-titulo">
+        <div class="seccion-header admin-encabezado">
+          <h1 id="admin-titulo">🛠️ Panel de Administración</h1>
+          <p>
+            Desde acá podés dar de alta nuevos componentes y administrar el
+            inventario que se muestra en el catálogo.
+          </p>
+        </div>
+
+        <div class="admin-form-panel">
+          <h2 id="admin-form-titulo">Nuevo producto</h2>
+
+          <form id="form-nuevo-producto" class="form-admin">
+            <div class="campo-admin">
+              <label for="producto-nombre">Nombre</label>
+              <input
+                type="text"
+                id="producto-nombre"
+                name="nombre"
+                placeholder="Ej: Placa de video ASUS RTX 4070"
+                autocomplete="off"
+                required
+              />
+            </div>
+
+            <div class="campo-admin">
+              <label for="producto-categoria">Categoría</label>
+              <select id="producto-categoria" name="categoria" required>
+                <option value="" disabled selected>Seleccioná una categoría</option>
+                <option value="Placas de Video">Placas de Video</option>
+                <option value="Procesadores">Procesadores</option>
+                <option value="Memorias RAM">Memorias RAM</option>
+                <option value="Refrigeración">Coolers / Refrigeración</option>
+                <option value="Gabinetes">Gabinetes</option>
+                <option value="Monitores">Monitores</option>
+                <option value="Periféricos">Periféricos</option>
+              </select>
+            </div>
+
+            <div class="campo-admin">
+              <label for="producto-precio">Precio</label>
+              <input
+                type="number"
+                id="producto-precio"
+                name="precio"
+                min="1"
+                step="0.01"
+                inputmode="decimal"
+                placeholder="Ej: 1199250"
+                required
+              />
+            </div>
+
+            <div class="campo-admin">
+              <label for="producto-precio-original">
+                Precio original / Lista
+                <span class="campo-opcional">(opcional)</span>
+              </label>
+              <input
+                type="number"
+                id="producto-precio-original"
+                name="precioOriginal"
+                min="1"
+                step="0.01"
+                inputmode="decimal"
+                placeholder="Solo si el producto está en oferta"
+              />
+            </div>
+
+            <div class="campo-admin campo-admin-completo">
+              <label for="producto-imagen">URL de imagen</label>
+              <input
+                type="text"
+                id="producto-imagen"
+                name="imagen"
+                placeholder="assets/img/..."
+                autocomplete="off"
+                required
+              />
+            </div>
+
+            <div class="campo-admin campo-admin-completo">
+              <label for="producto-descripcion">Descripción</label>
+              <textarea
+                id="producto-descripcion"
+                name="descripcion"
+                rows="4"
+                placeholder="Características principales del producto"
+                required
+              ></textarea>
+            </div>
+
+            <div class="campo-admin campo-admin-completo campo-admin-oferta">
+              <label class="switch" for="producto-oferta">
+                <input
+                  type="checkbox"
+                  id="producto-oferta"
+                  name="oferta"
+                  role="switch"
+                />
+                <span class="switch-control" aria-hidden="true"></span>
+                <span class="switch-texto">¿Está en oferta?</span>
+              </label>
+            </div>
+
+            <div class="campo-admin campo-admin-completo admin-form-acciones">
+              <button type="submit" class="btn-admin-guardar">
+                Guardar Producto
+              </button>
+            </div>
+          </form>
+
+          <p
+            id="admin-mensaje"
+            class="admin-mensaje"
+            role="status"
+            aria-live="polite"
+            hidden
+          ></p>
+        </div>
+      </section>
+
+      <!-- Listado y baja de productos -->
+      <section class="admin-seccion" aria-labelledby="admin-tabla-titulo">
+        <div class="seccion-header admin-encabezado">
+          <h2 id="admin-tabla-titulo">Productos en la tienda</h2>
+          <p>
+            Listado completo del inventario. El botón <strong>Eliminar</strong>
+            borra el producto de forma permanente.
+          </p>
+        </div>
+
+        <p
+          id="admin-tabla-estado"
+          class="estado-catalogo"
+          role="status"
+          aria-live="polite"
+        >
+          Cargando productos...
+        </p>
+
+        <div class="tabla-admin-contenedor">
+          <table class="tabla-admin">
+            <caption>
+              Productos registrados en la tienda WOL Hardware
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Miniatura</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Categoría</th>
+                <th scope="col">Precio</th>
+                <th scope="col">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="admin-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-links">
+        <a href="contact.html">Contacto</a>
+        <a href="contact.html#preguntas-frecuentes">Preguntas frecuentes</a>
+        <a href="contact.html#envios">Envíos</a>
+        <a href="contact.html#terminos">Términos y condiciones</a>
+      </div>
+      <p>© 2026 WOL Hardware. Todos los derechos reservados.</p>
+    </footer>
+  </body>
+</html>
