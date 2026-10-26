@@ -100,6 +100,7 @@ function crearTarjetaCompacta(producto) {
         type="button"
         class="btn-comprar"
         data-agregar-carrito
+        aria-label="Agregar ${escaparHTML(producto.nombre)} al carrito"
         data-id="${escaparHTML(producto.id)}"
         data-nombre="${escaparHTML(producto.nombre)}"
         data-precio="${Number(producto.precio) || 0}"

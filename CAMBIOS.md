@@ -205,3 +205,51 @@ En `style.css` se agregaron:
 - ajustes responsive para que los botones de acción se apilen en celulares y la notificación ocupe el ancho disponible.
 
 Además se agregó una regla global `[hidden] { display: none !important; }` para que los elementos que se muestran u ocultan desde JavaScript no queden visibles por culpa de otros `display` definidos en CSS.
+
+## 8. Hero banner, navegación activa y accesibilidad semántica
+
+### 8.1. Banner de bienvenida en la portada
+
+En `index.html` se agregó una sección semántica `<section class="hero-banner">` antes del buscador, con:
+
+- un `<h1>` llamativo: **"Hardware de Alto Rendimiento para tu Setup"**;
+- una bajada breve que invita a recorrer el catálogo;
+- un enlace destacado **"Explorar Catálogo"** hacia `catalogo.html`.
+
+En `style.css` el banner usa una estética dark/gamer coherente con el resto del sitio: fondo oscuro con degradados cian y rojo, una grilla sutil, bordes redondeados, sombra, buen espaciado vertical y contenido centrado. El botón `.hero-cta` tiene contraste alto (texto oscuro sobre cian), estados `:hover` y `:focus-visible`, y en pantallas chicas ocupa el ancho disponible.
+
+### 8.2. Jerarquía de encabezados y logo enlazado
+
+El logo **WOL** del `<header>` ahora es un enlace `<a class="logo" href="index.html">` en todas las páginas, incluida la portada. De esta forma el `<h1>` queda reservado para el título principal de cada vista:
+
+- `index.html`: el título del hero;
+- `catalogo.html`: "Inventario General";
+- `detalle-producto.html`: el nombre del producto;
+- `carrito.html`: "Carrito de Compras";
+- `contact.html`: "Contactanos".
+
+Los títulos internos de cada sección se mantienen en `<h2>` y los nombres de las tarjetas en `<h3>`, así la estructura de encabezados no salta niveles y los lectores de pantalla pueden navegar por la página de forma ordenada.
+
+### 8.3. Indicador de página activa con `aria-current`
+
+En el `<nav>` principal de cada archivo HTML se agregó `aria-current="page"` y la clase `.link-activo` al enlace de la página actual. La regla `.nav-centrado a.link-activo` en `style.css` pinta el enlace con el cian de la marca y le agrega un borde inferior sutil. El atributo `aria-current` comunica la misma información a las tecnologías de asistencia, mientras que la clase lo hace visualmente.
+
+### 8.4. `aria-label` descriptivos en los botones de compra
+
+Las tarjetas generadas dinámicamente en `js/app.js` y `js/catalogo.js` ahora incluyen un `aria-label` específico en el botón de compra, por ejemplo:
+
+```html
+aria-label="Agregar Placa de video ASUS RTX 4070 al carrito"
+```
+
+Así, cuando un lector de pantalla recorre varias tarjetas, cada botón indica qué producto agrega en lugar de repetir un genérico "Agregar al carrito".
+
+### 8.5. Descuento calculado dinámicamente
+
+En `js/app.js`, al adaptar los productos de Supabase se calcula el porcentaje real de rebaja cuando existen `precioOriginal` y `precio`:
+
+```js
+Math.round(((precioOriginal - precio) / precioOriginal) * 100)
+```
+
+El resultado se muestra en el badge como `-${descuento}% OFF` en lugar del valor fijo anterior. Si un producto está marcado como oferta pero no tiene un precio original válido, el badge muestra "OFERTA" como respaldo.
