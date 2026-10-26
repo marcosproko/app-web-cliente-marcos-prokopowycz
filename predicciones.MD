@@ -55,3 +55,6 @@
 
 ## 21. Panel de Backoffice y Gestión de Productos (CRUD) con Supabase
 - Predicción: Espero crear una vista administrativa (admin.html y js/admin.js) que permita dar de alta productos nuevos mediante una petición POST con fetch() a Supabase, validar que los campos obligatorios (nombre, precio, categoría, imagen y descripción) no estén vacíos, y renderizar una tabla de gestión con los 18 productos existentes donde cada fila incluya un botón interactivo para eliminar productos (DELETE) con confirmación previa y refresco dinámico en pantalla, respondiendo a la observación de la cátedra sobre gestión de productos.
+
+## 22. Corrección de Cálculo en Precios con Decimales, UX de Portada y Feedback Accesible
+- Predicción: Espero normalizar la extracción de precios numéricos en carrito.js admitiendo decimales mediante parseFloat sin eliminar el separador decimal, incorporar un estado visual de carga y mensaje de error amigable en app.js frente a caídas de Supabase, dotar de estilos a la clase .sin-resultados en style.css, añadir aria-label contextual a los botones de detalle de las tarjetas, declarar aria-live="polite" en las alertas de contacto para tecnologías asistivas, transparentar el texto del modal como simulación de compra y documentar en admin.html el alcance pedagógico sin autenticación.
