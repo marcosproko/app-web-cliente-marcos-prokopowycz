@@ -7,7 +7,7 @@ function formatearPrecio(precio) {
     style: 'currency',
     currency: 'ARS',
     minimumFractionDigits: 0,
-    maximumFractionDigits: 0
+    maximumFractionDigits: 2
   }).format(precio).replace('ARS', '$');
 }
 
@@ -49,7 +49,11 @@ function crearTarjetaProducto(producto) {
     <h3>${escaparHTML(producto.nombre)}</h3>
     <p>${escaparHTML(producto.descripcion)}</p>
     ${precioHTML}
-    <a href="${escaparHTML(producto.enlaceDetalle)}" class="btn-detalle">Ver detalle →</a>
+    <a
+      href="${escaparHTML(producto.enlaceDetalle)}"
+      class="btn-detalle"
+      aria-label="Ver detalle de ${escaparHTML(producto.nombre)}"
+    >Ver detalle →</a>
     <button
       type="button"
       class="btn-comprar"
@@ -77,6 +81,55 @@ function renderizarProductos(productos, contenedorId) {
     const tarjeta = crearTarjetaProducto(producto);
     contenedor.appendChild(tarjeta);
   });
+}
+
+function mostrarCargandoProductos(contenedorId) {
+  const contenedor = document.getElementById(contenedorId);
+  if (!contenedor) return;
+
+  contenedor.innerHTML = `
+    <p class="cargando-productos" role="status">
+      Cargando productos...
+    </p>
+  `;
+}
+
+function prepararCargaPortada() {
+  const sinResultados = document.getElementById('sin-resultados');
+
+  ['seccion-ofertas', 'seccion-nuevos'].forEach((id) => {
+    const seccion = document.getElementById(id);
+    if (seccion) seccion.style.display = '';
+  });
+
+  if (sinResultados) sinResultados.hidden = true;
+
+  mostrarCargandoProductos('ofertas-grid');
+  mostrarCargandoProductos('nuevos-grid');
+}
+
+function mostrarErrorCargaProductos() {
+  const mensaje =
+    'No pudimos conectar con el catálogo en este momento. Intente más tarde.';
+
+  ['seccion-ofertas', 'seccion-nuevos'].forEach((id) => {
+    const seccion = document.getElementById(id);
+    if (seccion) seccion.style.display = '';
+  });
+
+  ['ofertas-grid', 'nuevos-grid'].forEach((id) => {
+    const contenedor = document.getElementById(id);
+    if (!contenedor) return;
+
+    contenedor.innerHTML = `
+      <p class="alerta-error" role="alert">
+        ${mensaje}
+      </p>
+    `;
+  });
+
+  const sinResultados = document.getElementById('sin-resultados');
+  if (sinResultados) sinResultados.hidden = true;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -156,6 +209,8 @@ const SUPABASE_URL = 'https://bvleuscwhbgvtdekreqn.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ2bGV1c2N3aGJndnRkZWtyZXFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI3NjQ0NjYsImV4cCI6MjEwODM0MDQ2Nn0.w_FD5NRZ0B0FDZOnVq5mwYCkq0uEmWoEUPOUWj1X6QU';
 
 async function obtenerProductos() {
+  prepararCargaPortada();
+
   try {
     const respuesta = await fetch(`${SUPABASE_URL}/rest/v1/Productos?select=*`, {
       method: 'GET',
@@ -203,6 +258,7 @@ async function obtenerProductos() {
 
   } catch (error) {
     console.error('Fallo al conectar con Supabase:', error);
+    mostrarErrorCargaProductos();
   }
 }
 

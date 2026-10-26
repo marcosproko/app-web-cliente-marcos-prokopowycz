@@ -74,7 +74,7 @@ function formatearPrecio(precio) {
     style: 'currency',
     currency: 'ARS',
     minimumFractionDigits: 0,
-    maximumFractionDigits: 0
+    maximumFractionDigits: 2
   }).format(Number(precio) || 0);
 }
 
@@ -95,7 +95,11 @@ function crearTarjetaCompacta(producto) {
     <p>${escaparHTML(producto.descripcion)}</p>
     <p class="precio">${formatearPrecio(producto.precio)}</p>
     <div class="card-acciones">
-      <a href="detalle-producto.html" class="btn-detalle">Detalle</a>
+      <a
+        href="detalle-producto.html"
+        class="btn-detalle"
+        aria-label="Ver detalle de ${escaparHTML(producto.nombre)}"
+      >Detalle</a>
       <button
         type="button"
         class="btn-comprar"
@@ -119,6 +123,11 @@ function renderizarProductos(lista) {
   gridInventario.innerHTML = '';
 
   if (lista.length === 0) {
+    gridInventario.innerHTML = `
+      <div class="sin-resultados" role="status">
+        <p>No hay productos disponibles en esta categoría.</p>
+      </div>
+    `;
     estadoCatalogo.textContent = 'No hay productos disponibles en esta categoría.';
     return;
   }
@@ -171,6 +180,11 @@ async function obtenerProductos() {
   } catch (error) {
     console.error('Fallo al conectar con Supabase:', error);
     estadoCatalogo.textContent = 'No se pudieron cargar los productos. Intentá nuevamente más tarde.';
+    gridInventario.innerHTML = `
+      <div class="alerta-error" role="alert">
+        No pudimos conectar con el catálogo en este momento. Intente más tarde.
+      </div>
+    `;
   }
 }
 
