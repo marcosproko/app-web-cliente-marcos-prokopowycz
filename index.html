@@ -10,11 +10,11 @@
   </head>
   <body>
     <header class="header-centrado">
-      <h1 class="marca-titulo">WOL</h1>
+      <a class="logo" href="index.html" aria-label="WOL Hardware - Inicio">WOL</a>
 
       <nav aria-label="Navegación principal">
         <ul class="nav-centrado">
-          <li><a href="index.html">Inicio</a></li>
+          <li><a href="index.html" class="link-activo" aria-current="page">Inicio</a></li>
           <li><a href="catalogo.html">Catálogo</a></li>
           <li>
             <a href="carrito.html" class="nav-carrito">
@@ -25,6 +25,16 @@
           <li><a href="contact.html">Contacto</a></li>
         </ul>
       </nav>
+    </header>
+    <main>
+      <section class="hero-banner" aria-labelledby="hero-titulo">
+        <h1 id="hero-titulo">Hardware de Alto Rendimiento para tu Setup</h1>
+        <p>
+          Descubrí componentes y periféricos seleccionados para llevar tu PC al
+          siguiente nivel, con garantía oficial y envíos a todo el país.
+        </p>
+        <a href="catalogo.html" class="hero-cta">Explorar Catálogo</a>
+      </section>
 
       <form role="search" class="search-centrado">
         <label for="buscador-productos" class="sr-only">Buscar producto</label>
@@ -37,8 +47,7 @@
         />
         <button type="submit">Buscar</button>
       </form>
-    </header>
-    <main>
+
       <div id="sin-resultados" class="sin-resultados" role="status" aria-live="polite" hidden>
         <p>Producto no disponible</p>
         <button id="btn-ver-todos" type="button">Ver todos los productos</button>

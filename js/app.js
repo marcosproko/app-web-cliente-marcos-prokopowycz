@@ -54,6 +54,7 @@ function crearTarjetaProducto(producto) {
       type="button"
       class="btn-comprar"
       data-agregar-carrito
+      aria-label="Agregar ${escaparHTML(producto.nombre)} al carrito"
       data-id="${escaparHTML(producto.id)}"
       data-nombre="${escaparHTML(producto.nombre)}"
       data-precio="${Number(producto.precio) || 0}"
@@ -171,13 +172,26 @@ async function obtenerProductos() {
     const productos = await respuesta.json();
 
   
-    const productosAdaptados = productos.map(p => ({
-      ...p,
-      oferta: Boolean(p.oferta),
-      badge: p.oferta ? "-25% OFF" : "NUEVO",
-      badgeClass: p.oferta ? "badge-oferta" : "badge-nuevo",
-      enlaceDetalle: "detalle-producto.html"
-    }));
+    const productosAdaptados = productos.map(p => {
+      const precio = Number(p.precio) || 0;
+      const precioOriginal = Number(p.precioOriginal) || 0;
+      const tieneOferta = Boolean(p.oferta);
+      const descuento = tieneOferta && precioOriginal > 0 && precio > 0 && precioOriginal > precio
+        ? Math.round(((precioOriginal - precio) / precioOriginal) * 100)
+        : 0;
+
+      return {
+        ...p,
+        precio,
+        precioOriginal: precioOriginal > 0 ? precioOriginal : null,
+        oferta: tieneOferta,
+        badge: tieneOferta
+          ? (descuento > 0 ? `-${descuento}% OFF` : 'OFERTA')
+          : 'NUEVO',
+        badgeClass: tieneOferta ? 'badge-oferta' : 'badge-nuevo',
+        enlaceDetalle: 'detalle-producto.html'
+      };
+    });
 
     todosLosProductos = productosAdaptados;
     productosOfertas = productosAdaptados.filter(p => p.oferta === true).slice(0, 3);
