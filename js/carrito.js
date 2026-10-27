@@ -384,6 +384,7 @@
 
       modal.hidden = false;
 
+      // El foco pasa al botón de cierre apenas el modal se hace visible.
       const botonCerrar = modal.querySelector('.modal-carrito-contenido [data-cerrar-modal]');
       if (botonCerrar) {
         botonCerrar.focus();
@@ -402,7 +403,79 @@
       }
     }
 
+    /**
+     * Devuelve los elementos interactivos visibles del diálogo para poder
+     * encerrar el foco dentro del modal mientras está abierto.
+     */
+    function obtenerElementosEnfocables(contenedor) {
+      return Array.from(
+        contenedor.querySelectorAll(
+          'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        )
+      ).filter(
+        (elemento) =>
+          !elemento.closest('[hidden]') &&
+          elemento.getAttribute('aria-hidden') !== 'true'
+      );
+    }
+
+    /**
+     * Cierra el modal con Escape y evita que Tab saque el foco hacia el
+     * contenido que queda de fondo.
+     */
+    function manejarTecladoModal(evento) {
+      if (!modal || modal.hidden) {
+        return;
+      }
+
+      if (evento.key === 'Escape') {
+        evento.preventDefault();
+        cerrarModal();
+        return;
+      }
+
+      if (evento.key !== 'Tab') {
+        return;
+      }
+
+      const contenido = modal.querySelector('.modal-carrito-contenido');
+      if (!contenido) {
+        return;
+      }
+
+      const enfocables = obtenerElementosEnfocables(contenido);
+
+      if (enfocables.length === 0) {
+        evento.preventDefault();
+        return;
+      }
+
+      const primero = enfocables[0];
+      const ultimo = enfocables[enfocables.length - 1];
+      const activo = document.activeElement;
+
+      if (!contenido.contains(activo)) {
+        evento.preventDefault();
+        (evento.shiftKey ? ultimo : primero).focus();
+        return;
+      }
+
+      if (evento.shiftKey && activo === primero) {
+        evento.preventDefault();
+        ultimo.focus();
+      } else if (!evento.shiftKey && activo === ultimo) {
+        evento.preventDefault();
+        primero.focus();
+      }
+    }
+
     function vaciarCarrito() {
+      const confirmado = window.confirm('¿Estás seguro de que deseas vaciar todos los productos del carrito?');
+
+      if (!confirmado) {
+        return;
+      }
+
       localStorage.removeItem(CLAVE_CARRITO);
       notificarActualizacion([]);
     }
@@ -475,11 +548,7 @@
         }
       });
 
-      document.addEventListener('keydown', (evento) => {
-        if (evento.key === 'Escape') {
-          cerrarModal();
-        }
-      });
+      document.addEventListener('keydown', manejarTecladoModal);
     }
 
     window.addEventListener('storage', (evento) => {
