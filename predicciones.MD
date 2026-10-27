@@ -62,3 +62,5 @@
 ## 24.  Modal Accesible, Confirmación de Vaciado y Ficha de Oferta
 - Predicción: Espero implementar una confirmación interactiva previa al vaciar el carrito para evitar pérdidas accidentales de datos, asegurar la gestión accesible del foco dentro del modal de compra finalizada (atrapando el tabulado y cerrando con tecla Escape), reflejar el estado de oferta y precio anterior en detalle-producto.html cuando corresponda, y añadir los datos de contacto y retiro en texto explícito en contact.html, completando todas las observaciones de auditoría.
 
+## 25. Corrección en Ficha de Detalle Dinámica y Restauración de Metadatos
+- Predicción: Espero restaurar los enlaces dinámicos en las tarjetas de inicio (js/app.js) y catálogo (js/catalogo.js) para que viajen con el parámetro ?id=${producto.id}. En detalle-producto.html, removeré la RTX 4070 estática de respaldo reemplazándola por contenedores vacíos con estados de carga/error dinámicos gestionados por js/detalle.js. Asimismo, reincorporaré en el head de los 6 HTML la meta descripción y el favicon SVG, y actualizaré el mensaje de contacto en contact.html con una aclaración honesta de simulación.
