@@ -35,9 +35,25 @@ function formatearPrecio(precio) {
   }).format(Number(precio) || 0)}`;
 }
 
-function mostrarMensaje(mensaje) {
+function mostrarMensaje(mensaje, opciones = {}) {
   if (estadoDetalle) {
-    estadoDetalle.textContent = mensaje;
+    estadoDetalle.classList.toggle('sin-resultados', Boolean(opciones.conVolver));
+    estadoDetalle.textContent = '';
+
+    if (opciones.conVolver) {
+      const texto = document.createElement('p');
+      texto.textContent = mensaje;
+
+      const enlace = document.createElement('a');
+      enlace.href = 'catalogo.html';
+      enlace.className = 'btn-detalle';
+      enlace.textContent = 'Volver al catálogo';
+
+      estadoDetalle.append(texto, enlace);
+    } else {
+      estadoDetalle.textContent = mensaje;
+    }
+
     estadoDetalle.hidden = false;
   }
 
@@ -177,6 +193,7 @@ function renderizarProducto(producto) {
     btnAgregarCarrito.dataset.id = String(producto.id ?? '');
     btnAgregarCarrito.dataset.nombre = nombre;
     btnAgregarCarrito.dataset.precio = String(producto.precio ?? '');
+    btnAgregarCarrito.dataset.imagen = String(producto.imagen ?? '');
     btnAgregarCarrito.dataset.categoria = categoria;
     btnAgregarCarrito.setAttribute('aria-label', `Agregar ${nombre} al carrito`);
   }
@@ -188,17 +205,11 @@ function renderizarProducto(producto) {
 async function cargarProducto() {
   const id = obtenerIdProducto();
 
-  if (!id) {
-    // La ficha incluye un producto de referencia en el HTML: se conserva
-    // como contenido estático de respaldo cuando no hay id en la URL.
-    if (estadoDetalle) estadoDetalle.hidden = true;
-    if (contenidoDetalle) contenidoDetalle.hidden = false;
-    return;
-  }
-
-  if (!/^[A-Za-z0-9_-]+$/.test(id)) {
-    document.title = 'Producto no válido | WOL Hardware';
-    mostrarMensaje('El identificador del producto no es válido. Volvé al catálogo para elegir uno.');
+  if (!id || !/^[A-Za-z0-9_-]+$/.test(id)) {
+    document.title = 'Producto no seleccionado | WOL Hardware';
+    mostrarMensaje('No se seleccionó ningún producto para ver el detalle.', {
+      conVolver: true
+    });
     return;
   }
 

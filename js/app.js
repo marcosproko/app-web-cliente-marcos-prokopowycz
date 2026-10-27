@@ -50,7 +50,7 @@ function crearTarjetaProducto(producto) {
     <p>${escaparHTML(producto.descripcion)}</p>
     ${precioHTML}
     <a
-      href="${escaparHTML(producto.enlaceDetalle)}"
+      href="detalle-producto.html?id=${encodeURIComponent(producto.id)}"
       class="btn-detalle"
       aria-label="Ver detalle de ${escaparHTML(producto.nombre)}"
     >Ver detalle →</a>
@@ -243,8 +243,7 @@ async function obtenerProductos() {
         badge: tieneOferta
           ? (descuento > 0 ? `-${descuento}% OFF` : 'OFERTA')
           : 'NUEVO',
-        badgeClass: tieneOferta ? 'badge-oferta' : 'badge-nuevo',
-        enlaceDetalle: 'detalle-producto.html'
+        badgeClass: tieneOferta ? 'badge-oferta' : 'badge-nuevo'
       };
     });
 

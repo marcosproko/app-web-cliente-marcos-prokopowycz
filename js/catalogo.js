@@ -96,7 +96,7 @@ function crearTarjetaCompacta(producto) {
     <p class="precio">${formatearPrecio(producto.precio)}</p>
     <div class="card-acciones">
       <a
-        href="detalle-producto.html"
+        href="detalle-producto.html?id=${encodeURIComponent(producto.id)}"
         class="btn-detalle"
         aria-label="Ver detalle de ${escaparHTML(producto.nombre)}"
       >Detalle</a>
