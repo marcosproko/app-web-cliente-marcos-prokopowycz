@@ -3,6 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="WOL Hardware - Tienda especializada en componentes de PC, placas de video, procesadores y periféricos de alto rendimiento.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
     <title>Contacto y Soporte | WOL Hardware</title>
     <link rel="stylesheet" href="style.css" />
     <script src="js/carrito.js" defer></script>
@@ -91,7 +93,7 @@
           aria-atomic="true"
           hidden
         >
-          ¡Mensaje enviado con éxito! Nos pondremos en contacto a la brevedad.
+          ¡Mensaje recibido! (Simulación de envío en entorno de demostración)
         </div>
       </section>
 
@@ -187,6 +189,8 @@
         formulario.addEventListener('submit', (e) => {
           e.preventDefault();
           formulario.reset();
+          mensajeExito.textContent =
+            '¡Mensaje recibido! (Simulación de envío en entorno de demostración)';
           mensajeExito.hidden = false;
         });
       });

@@ -3,7 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Placa de video ASUS RTX 4070 | WOL Hardware</title>
+    <meta name="description" content="WOL Hardware - Tienda especializada en componentes de PC, placas de video, procesadores y periféricos de alto rendimiento.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+    <title>Detalle de producto | WOL Hardware</title>
     <link rel="stylesheet" href="style.css" />
     <script src="js/carrito.js" defer></script>
     <script src="js/detalle.js" defer></script>
@@ -31,58 +33,44 @@
 
     <main>
       <article class="detalle-producto">
-        <p
+        <div
           id="detalle-estado"
           class="estado-catalogo"
           role="status"
           aria-live="polite"
-          hidden
         >
           Cargando producto...
-        </p>
+        </div>
 
-        <div id="detalle-contenido">
+        <div id="detalle-contenido" hidden>
           <div class="detalle-superior">
             <figure class="detalle-imagen">
-              <img
-                id="detalle-imagen"
-                src="assets/img/4070.jpg"
-                alt="Placa de video ASUS RTX 4070"
-                loading="lazy"
-              />
+              <img id="detalle-imagen" src="" alt="" loading="lazy" />
             </figure>
 
             <section class="detalle-info" aria-label="Información general del producto">
               <div class="detalle-etiquetas">
-                <span class="tag-categoria" id="detalle-categoria">PLACA DE VIDEO</span>
-                <span class="badge badge-oferta badge-detalle" id="detalle-badge-oferta">
+                <span class="tag-categoria" id="detalle-categoria"></span>
+                <span class="badge badge-oferta badge-detalle" id="detalle-badge-oferta" hidden>
                   OFERTA
                 </span>
               </div>
-              <h1 id="detalle-titulo">Placa de video ASUS RTX 4070</h1>
-              <p class="detalle-descripcion" id="detalle-descripcion">
-                Rendimiento gráfico de última generación con 12 GB GDDR6X y soporte
-                DLSS 3 para máxima fluidez en resolución 1440p y 4K.
-              </p>
+              <h1 id="detalle-titulo"></h1>
+              <p class="detalle-descripcion" id="detalle-descripcion"></p>
               <p class="precio" id="detalle-precio">
-                <span id="detalle-precio-actual">$1.199.250</span>
-                <span
-                  class="precio-tachado"
-                  id="detalle-precio-original"
-                  hidden
-                >
-                </span>
+                <span id="detalle-precio-actual"></span>
+                <span class="precio-tachado" id="detalle-precio-original" hidden></span>
               </p>
               <button
                 type="button"
                 class="btn-comprar"
                 id="btn-agregar-carrito"
                 data-agregar-carrito
-                data-id="45"
-                data-nombre="Placa de video ASUS RTX 4070"
-                data-precio="1199250"
-                data-imagen="assets/img/4070.jpg"
-                data-categoria="Placas de Video"
+                data-id=""
+                data-nombre=""
+                data-precio="0"
+                data-imagen=""
+                data-categoria=""
               >
                 Agregar al carrito 🛒
               </button>
@@ -92,28 +80,13 @@
           <section class="detalle-ficha" aria-label="Ficha técnica del producto">
             <h2>Ficha técnica</h2>
             <table class="tabla-carrito">
-              <caption id="detalle-ficha-caption">
-                Especificaciones técnicas de la Placa de video ASUS RTX 4070
-              </caption>
-              <tbody id="detalle-especificaciones">
-                <tr>
-                  <th scope="row">Memoria</th>
-                  <td>12 GB GDDR6X</td>
-                </tr>
-                <tr>
-                  <th scope="row">Tecnologías</th>
-                  <td>DLSS 3, Ray Tracing núcleos de 3ra gen</td>
-                </tr>
-                <tr>
-                  <th scope="row">Garantía</th>
-                  <td>36 meses oficial</td>
-                </tr>
-              </tbody>
+              <caption id="detalle-ficha-caption"></caption>
+              <tbody id="detalle-especificaciones"></tbody>
             </table>
           </section>
 
           <section class="detalle-volver" aria-label="Enlaces relacionados">
-            <a href="index.html" class="btn-detalle">← Volver al inicio</a>
+            <a href="catalogo.html" class="btn-detalle">← Volver al catálogo</a>
           </section>
         </div>
       </article>

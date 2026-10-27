@@ -497,3 +497,82 @@ Se agregó la variable `--color-texto-secundario` (mismo gris claro que `--color
 ```
 
 El tamaño es menor que el del precio actual, el color queda atenuado y la línea de tachado comunica que se trata de un precio anterior. En la ficha, `.badge-detalle` anula el posicionamiento absoluto del badge genérico para que fluya junto a la categoría y no tape contenido.
+
+## 13. Regresión del ID en las tarjetas, ficha sin `?id=` y metadatos restituidos
+
+### 13.1. Enlaces "Detalle" / "Ver detalle" con identificador
+
+La regresión consistía en que las tarjetas abrían `detalle-producto.html` sin parámetro, así que la ficha no sabía qué producto consultar. Se corrigió en los dos renderizadores:
+
+- `js/app.js` → `crearTarjetaProducto()` ya no usa el campo `enlaceDetalle` (que se eliminó del objeto adaptado en `obtenerProductos()`) y arma el `href` directamente:
+
+  ```html
+  <a href="detalle-producto.html?id=${encodeURIComponent(producto.id)}" class="btn-detalle">Ver detalle →</a>
+  ```
+
+- `js/catalogo.js` → `crearTarjetaCompacta()` usa exactamente la misma expresión, de modo que el botón "Detalle" también viaja con el `id`.
+
+`encodeURIComponent()` garantiza que un `id` con caracteres especiales no rompa la query string. Se verificó además que no quede ningún `href` fijo a `detalle-producto.html` sin parámetro en el HTML ni en los scripts: es la única forma de que la ficha reciba siempre el producto que se clickeó.
+
+### 13.2. Ficha de producto sin contenido estático
+
+`detalle-producto.html` ya no tiene cableada la RTX 4070. Se eliminaron la imagen de ejemplo, el título, la descripción, el precio y las filas de la ficha técnica. El documento queda como un esqueleto de contenedores vacíos:
+
+- `#detalle-estado` visible al cargar, con el texto **"Cargando producto..."**;
+- `#detalle-contenido` oculto con el atributo `hidden` hasta que llegan los datos;
+- las ranuras `#detalle-imagen`, `#detalle-categoria`, `#detalle-badge-oferta`, `#detalle-titulo`, `#detalle-descripcion`, `#detalle-precio-actual`, `#detalle-precio-original`, `#detalle-ficha-caption` y `#detalle-especificaciones` vacías;
+- el botón `#btn-agregar-carrito` con sus `data-*` vacíos, listos para hidratarse;
+- el enlace de vuelta apuntando ahora a `catalogo.html` y no a `index.html`.
+
+### 13.3. URL sin `?id=`: mensaje claro en lugar de datos de prueba
+
+En `js/detalle.js`, `cargarProducto()` valida primero la URL:
+
+```js
+const id = obtenerIdProducto();
+
+if (!id || !/^[A-Za-z0-9_-]+$/.test(id)) {
+  document.title = 'Producto no seleccionado | WOL Hardware';
+  mostrarMensaje('No se seleccionó ningún producto para ver el detalle.', { conVolver: true });
+  return;
+}
+```
+
+`mostrarMensaje()` acepta un segundo parámetro `opciones`. Cuando llega `conVolver: true`, escribe el mensaje en `#detalle-estado` (con `role="status"` y `aria-live="polite"` para que se anuncie), lo deja visible, oculta `#detalle-contenido` y agrega un botón **"Volver al catálogo"** que apunta a `catalogo.html`. De esta manera:
+
+- sin `?id=` la página no muestra ninguna ficha falsa;
+- con un `id` inválido (caracteres no permitidos por el filtro) se muestra el mismo aviso con la misma salida;
+- con un `id` válido se pide `?id=eq.<id>&select=*` a Supabase y el `catch` sigue cubriendo errores de red y productos inexistentes.
+
+### 13.4. Hidratación dinámica del detalle
+
+Cuando la consulta devuelve un producto, `renderizarProducto()` completa la ficha sin contenido de respaldo:
+
+- `document.title` y el `<h1 id="detalle-titulo">` reciben el nombre;
+- `#detalle-imagen` recibe `src` y `alt` (o queda con `alt` "Imagen no disponible" si no hay imagen);
+- `#detalle-descripcion`, `#detalle-categoria` y el badge de oferta se actualizan;
+- `#detalle-precio-actual` y `#detalle-precio-original` se completan con `formatearPrecio()` y el tachado solo aparece si hay precio de lista;
+- `#detalle-ficha-caption` y `#detalle-especificaciones` se generan a partir de la categoría, marca, estado, garantía y código del producto;
+- el botón `#btn-agregar-carrito` hidrata `data-id`, `data-nombre`, `data-precio`, `data-imagen` y `data-categoria` (se agregó `data-imagen`, que faltaba) y refresca su `aria-label`.
+
+Así, `js/carrito.js` recibe los cinco atributos que necesita y el producto que llega al carrito coincide con el de la URL.
+
+### 13.5. Favicon y meta descripción en los seis HTML
+
+Se restituyeron en el `<head>` de `index.html`, `catalogo.html`, `detalle-producto.html`, `carrito.html`, `contact.html` y `admin.html` las dos etiquetas que se habían perdido:
+
+```html
+<meta name="description" content="WOL Hardware - Tienda especializada en componentes de PC, placas de video, procesadores y periféricos de alto rendimiento.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+```
+
+La descripción es idéntica en las seis vistas para que el resultado en buscadores sea consistente y el favicon es un SVG embebido con el emoji ⚡ en `data:` URI, así que no depende de un archivo externo ni de una ruta que pueda romperse. En `detalle-producto.html` el `<title>` quedó genérico ("Detalle de producto | WOL Hardware") porque el nombre real lo escribe `js/detalle.js` después de la consulta.
+
+### 13.6. Mensaje honesto en el formulario de contacto
+
+El submit de `contact.html` sigue siendo una simulación local: no hay backend de correo. Por eso el bloque `#mensaje-exito` (que conserva `role="status"`, `aria-live="polite"` y `aria-atomic="true"`) ahora dice:
+
+> ¡Mensaje recibido! (Simulación de envío en entorno de demostración)
+
+El texto está tanto en el HTML como en el manejador de `submit`, que lo asigna con `mensajeExito.textContent` antes de mostrarlo, para que no dependa de un texto previo en el marcado. De esta forma la interfaz no promete un envío que en realidad no ocurre.
+
