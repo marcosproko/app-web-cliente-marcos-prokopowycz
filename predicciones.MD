@@ -58,3 +58,7 @@
 
 ## 22. Corrección de Cálculo en Precios con Decimales, UX de Portada y Feedback Accesible
 - Predicción: Espero normalizar la extracción de precios numéricos en carrito.js admitiendo decimales mediante parseFloat sin eliminar el separador decimal, incorporar un estado visual de carga y mensaje de error amigable en app.js frente a caídas de Supabase, dotar de estilos a la clase .sin-resultados en style.css, añadir aria-label contextual a los botones de detalle de las tarjetas, declarar aria-live="polite" en las alertas de contacto para tecnologías asistivas, transparentar el texto del modal como simulación de compra y documentar en admin.html el alcance pedagógico sin autenticación.
+
+## 24.  Modal Accesible, Confirmación de Vaciado y Ficha de Oferta
+- Predicción: Espero implementar una confirmación interactiva previa al vaciar el carrito para evitar pérdidas accidentales de datos, asegurar la gestión accesible del foco dentro del modal de compra finalizada (atrapando el tabulado y cerrando con tecla Escape), reflejar el estado de oferta y precio anterior en detalle-producto.html cuando corresponda, y añadir los datos de contacto y retiro en texto explícito en contact.html, completando todas las observaciones de auditoría.
+

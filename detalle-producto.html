@@ -6,6 +6,7 @@
     <title>Placa de video ASUS RTX 4070 | WOL Hardware</title>
     <link rel="stylesheet" href="style.css" />
     <script src="js/carrito.js" defer></script>
+    <script src="js/detalle.js" defer></script>
   </head>
   <body>
     <!-- Encabezado con navegación consistente -->
@@ -30,64 +31,91 @@
 
     <main>
       <article class="detalle-producto">
-        <div class="detalle-superior">
-          <figure class="detalle-imagen">
-            <img
-              src="assets/img/4070.jpg"
-              alt="Placa de video ASUS RTX 4070"
-              loading="lazy"
-            />
-          </figure>
+        <p
+          id="detalle-estado"
+          class="estado-catalogo"
+          role="status"
+          aria-live="polite"
+          hidden
+        >
+          Cargando producto...
+        </p>
 
-          <section class="detalle-info" aria-label="Información general del producto">
-            <span class="tag-categoria">PLACA DE VIDEO</span>
-            <h1>Placa de video ASUS RTX 4070</h1>
-            <p class="detalle-descripcion">
-              Rendimiento gráfico de última generación con 12 GB GDDR6X y soporte
-              DLSS 3 para máxima fluidez en resolución 1440p y 4K.
-            </p>
-            <p class="precio">$1.199.250</p>
-            <button
-              type="button"
-              class="btn-comprar"
-              data-agregar-carrito
-              data-id="45"
-              data-nombre="Placa de video ASUS RTX 4070"
-              data-precio="1199250"
-              data-imagen="assets/img/4070.jpg"
-              data-categoria="Placas de Video"
-            >
-              Agregar al carrito 🛒
-            </button>
+        <div id="detalle-contenido">
+          <div class="detalle-superior">
+            <figure class="detalle-imagen">
+              <img
+                id="detalle-imagen"
+                src="assets/img/4070.jpg"
+                alt="Placa de video ASUS RTX 4070"
+                loading="lazy"
+              />
+            </figure>
+
+            <section class="detalle-info" aria-label="Información general del producto">
+              <div class="detalle-etiquetas">
+                <span class="tag-categoria" id="detalle-categoria">PLACA DE VIDEO</span>
+                <span class="badge badge-oferta badge-detalle" id="detalle-badge-oferta">
+                  OFERTA
+                </span>
+              </div>
+              <h1 id="detalle-titulo">Placa de video ASUS RTX 4070</h1>
+              <p class="detalle-descripcion" id="detalle-descripcion">
+                Rendimiento gráfico de última generación con 12 GB GDDR6X y soporte
+                DLSS 3 para máxima fluidez en resolución 1440p y 4K.
+              </p>
+              <p class="precio" id="detalle-precio">
+                <span id="detalle-precio-actual">$1.199.250</span>
+                <span
+                  class="precio-tachado"
+                  id="detalle-precio-original"
+                  hidden
+                >
+                </span>
+              </p>
+              <button
+                type="button"
+                class="btn-comprar"
+                id="btn-agregar-carrito"
+                data-agregar-carrito
+                data-id="45"
+                data-nombre="Placa de video ASUS RTX 4070"
+                data-precio="1199250"
+                data-imagen="assets/img/4070.jpg"
+                data-categoria="Placas de Video"
+              >
+                Agregar al carrito 🛒
+              </button>
+            </section>
+          </div>
+
+          <section class="detalle-ficha" aria-label="Ficha técnica del producto">
+            <h2>Ficha técnica</h2>
+            <table class="tabla-carrito">
+              <caption id="detalle-ficha-caption">
+                Especificaciones técnicas de la Placa de video ASUS RTX 4070
+              </caption>
+              <tbody id="detalle-especificaciones">
+                <tr>
+                  <th scope="row">Memoria</th>
+                  <td>12 GB GDDR6X</td>
+                </tr>
+                <tr>
+                  <th scope="row">Tecnologías</th>
+                  <td>DLSS 3, Ray Tracing núcleos de 3ra gen</td>
+                </tr>
+                <tr>
+                  <th scope="row">Garantía</th>
+                  <td>36 meses oficial</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section class="detalle-volver" aria-label="Enlaces relacionados">
+            <a href="index.html" class="btn-detalle">← Volver al inicio</a>
           </section>
         </div>
-
-        <section class="detalle-ficha" aria-label="Ficha técnica del producto">
-          <h2>Ficha técnica</h2>
-          <table class="tabla-carrito">
-            <caption>
-              Especificaciones técnicas de la Placa de video ASUS RTX 4070
-            </caption>
-            <tbody>
-              <tr>
-                <th scope="row">Memoria</th>
-                <td>12 GB GDDR6X</td>
-              </tr>
-              <tr>
-                <th scope="row">Tecnologías</th>
-                <td>DLSS 3, Ray Tracing núcleos de 3ra gen</td>
-              </tr>
-              <tr>
-                <th scope="row">Garantía</th>
-                <td>36 meses oficial</td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
-
-        <section class="detalle-volver" aria-label="Enlaces relacionados">
-          <a href="index.html" class="btn-detalle">← Volver al inicio</a>
-        </section>
       </article>
     </main>
 

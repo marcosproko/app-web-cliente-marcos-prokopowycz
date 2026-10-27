@@ -422,3 +422,78 @@ El aviso usa la clase `.alerta-error` (fondo rojo oscuro, borde y texto claros) 
 ### 11.4. Estilos para estados vacíos
 
 En `style.css` se agregó la regla `.sin-resultados` con fondo `#1e293b`, borde redondeado, padding amplio, sombra y texto claro centrado, en línea con la estética dark/gamer del sitio. Se usa tanto en el bloque de búsqueda sin coincidencias de `index.html` como en el catálogo cuando una categoría no tiene productos. También se sumaron `.cargando-productos` (estado de carga con borde punteado) y `.alerta-error` (alerta de conexión con fondo rojo oscuro y borde visible).
+
+## 12. Coherencia interactiva y accesibilidad final
+
+### 12.1. Confirmación antes de vaciar el carrito
+
+En `js/carrito.js`, la función `vaciarCarrito()` ahora pide una confirmación nativa antes de borrar el contenido:
+
+```js
+const confirmado = window.confirm('¿Estás seguro de que deseas vaciar todos los productos del carrito?');
+
+if (!confirmado) {
+  return;
+}
+```
+
+Si la persona cancela, la función termina sin tocar `localStorage`, sin volver a renderizar la tabla y sin actualizar el contador del menú. Solo cuando acepta se elimina la clave `carrito_wol`, se dispara `carrito-actualizado` y se muestra el estado vacío. Así se evita perder el carrito por un clic accidental, algo especialmente importante porque el estado persiste entre visitas.
+
+### 12.2. Foco y teclado dentro del modal de compra
+
+El modal de compra finalizada de `carrito.html` ya se abría con el foco en el botón **Cerrar** y se cerraba con `Escape`, pero el tabulado todavía podía escaparse hacia los enlaces y botones del fondo. En `js/carrito.js` se centralizó el manejo del teclado en `manejarTecladoModal()`:
+
+- al abrir el modal, se guarda el elemento que tenía el foco y se llama a `.focus()` sobre el botón `[data-cerrar-modal]` del diálogo;
+- `Escape` cierra el modal y devuelve el foco al elemento que lo abrió;
+- `Tab` y `Shift + Tab` recorren solamente los elementos enfocables visibles dentro de `.modal-carrito-contenido`;
+- si el foco está en el último elemento y se presiona `Tab`, vuelve al primero; si está en el primero y se presiona `Shift + Tab`, salta al último;
+- si por alguna razón el foco quedó fuera del diálogo, la siguiente pulsación de `Tab` lo devuelve al primer control interno.
+
+Para obtener los controles se usa una lista de selectores (`a[href]`, `button`, `input`, `select`, `textarea` y `[tabindex]`) y se descartan los que están ocultos. El listener de teclado se registra una sola vez sobre `document`, pero solo actúa cuando el modal existe y no está oculto.
+
+### 12.3. Oferta y precio de lista en la ficha de producto
+
+En `detalle-producto.html` se preparó la ficha para mostrar información de oferta:
+
+- la categoría y el badge quedaron dentro de `.detalle-etiquetas`, un contenedor flexible que los alinea sin superponerlos;
+- se agregó `<span class="badge badge-oferta badge-detalle" id="detalle-badge-oferta">OFERTA</span>`;
+- el precio vive en `<p class="precio" id="detalle-precio">` y tiene dos ranuras: `#detalle-precio-actual` para el precio vigente y `<span class="precio-tachado" id="detalle-precio-original" hidden>` para el precio de lista;
+- se agregaron los ids que necesita `js/detalle.js` (`detalle-contenido`, `detalle-imagen`, `detalle-titulo`, `detalle-descripcion`, `detalle-ficha-caption`, `detalle-especificaciones`), de modo que la ficha estática sigue funcionando como respaldo y además puede hidratarse desde Supabase cuando la URL incluye `?id=`.
+
+En `js/detalle.js` se incorporó `esOferta()`, que acepta `true`, `1`, `"true"` y `"1"` como valores válidos. `actualizarBadgeOferta()` muestra u oculta el badge según el campo `oferta` del producto y, si el badge no existiera en el HTML, lo crea al lado de la categoría. `renderizarPrecio()` completa las dos ranuras del precio:
+
+```js
+precioActualDetalle.textContent = formatearPrecio(precio);
+precioOriginalDetalle.textContent = precioOriginal > 0 ? formatearPrecio(precioOriginal) : '';
+precioOriginalDetalle.hidden = precioOriginal <= 0;
+```
+
+Si la ficha no tuviera esas ranuras, la función arma el mismo resultado con `innerHTML` y un `<span class="precio-tachado">`. Todos los textos que provienen de la base pasan por `escaparHTML()` antes de insertarse. Si la URL no trae un `id`, la ficha conserva el contenido estático de referencia en lugar de mostrar un error.
+
+### 12.4. Datos de contacto y retiro en texto legible
+
+En `contact.html`, la sección de envíos pasó a llamarse **"Envíos y retiro en local"** y ahora incluye un bloque `.datos-retiro` con la información comercial en texto plano, sin depender del iframe de Google Maps:
+
+- dirección comercial: Av. Corrientes 1234, Ciudad Autónoma de Buenos Aires;
+- horarios de atención: lunes a viernes de 10:00 a 19:00 h y sábados de 10:00 a 14:00 h;
+- teléfono de soporte: `+54 11 5555-1234`, enlazado con `tel:`;
+- email de soporte: `soporte@wolhardware.com.ar`, enlazado con `mailto:`.
+
+La información se maqueta con `<address>` y párrafos con etiquetas `<strong>`, de modo que sea legible, copiable y accesible para lectores de pantalla. En `style.css` se agregaron los estilos `.datos-retiro`, `.datos-retiro address`, `.datos-retiro p`, `.datos-retiro strong` y los estados `:hover` y `:focus-visible` de sus enlaces.
+
+### 12.5. Estilos del precio tachado
+
+Se agregó la variable `--color-texto-secundario` (mismo gris claro que `--color-muted`) y se actualizó `.precio-tachado` para que cumpla las tres condiciones visuales:
+
+```css
+.precio-tachado {
+  font-size: 0.85rem;
+  color: var(--color-texto-secundario);
+  text-decoration: line-through;
+  font-weight: 400;
+  margin-left: 0.5rem;
+  opacity: 0.85;
+}
+```
+
+El tamaño es menor que el del precio actual, el color queda atenuado y la línea de tachado comunica que se trata de un precio anterior. En la ficha, `.badge-detalle` anula el posicionamiento absoluto del badge genérico para que fluya junto a la categoría y no tape contenido.
