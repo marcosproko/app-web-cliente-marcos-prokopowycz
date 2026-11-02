@@ -18,6 +18,8 @@ const botonGuardar = formNuevoProducto
   : null;
 
 let temporizadorMensaje = null;
+let productoEditandoId = null;
+const productosPorId = new Map();
 
 function escaparHTML(valor) {
   return String(valor ?? '').replace(/[&<>"']/g, (caracter) => {
@@ -107,6 +109,14 @@ function crearFilaProducto(producto) {
     <td class="admin-celda-acciones">
       <button
         type="button"
+        class="btn-warning"
+        data-editar="${id}"
+        aria-label="Editar ${nombre}"
+      >
+        Editar
+      </button>
+      <button
+        type="button"
         class="btn-danger"
         data-eliminar="${id}"
         data-nombre="${nombre}"
@@ -150,6 +160,13 @@ async function listarProductosAdmin() {
     if (!Array.isArray(productos)) {
       throw new Error('La respuesta de Supabase no es una lista de productos.');
     }
+
+    productosPorId.clear();
+    productos.forEach((producto) => {
+      if (producto.id) {
+        productosPorId.set(String(producto.id), producto);
+      }
+    });
 
     adminTbody.innerHTML = '';
 
@@ -241,7 +258,7 @@ async function guardarProducto(evento) {
     nuevoProducto.precioOriginal = precioOriginal;
   }
 
-  const textoBoton = botonGuardar ? botonGuardar.textContent : '';
+  let textoBoton = botonGuardar ? botonGuardar.textContent : '';
 
   if (botonGuardar) {
     botonGuardar.disabled = true;
@@ -260,8 +277,24 @@ async function guardarProducto(evento) {
       body: JSON.stringify(producto)
     });
 
+  const enviarProducto = (producto) => {
+    if (productoEditandoId) {
+      return fetch(`${SUPABASE_URL}/rest/v1/Productos?id=eq.${encodeURIComponent(productoEditandoId)}`, {
+        method: 'PATCH',
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json',
+          Prefer: 'return=representation'
+        },
+        body: JSON.stringify(producto)
+      });
+    }
+    return insertarProducto(producto);
+  };
+
   try {
-    let respuesta = await insertarProducto(nuevoProducto);
+    let respuesta = await enviarProducto(nuevoProducto);
     let precioOriginalOmitido = false;
 
     /*
@@ -289,6 +322,8 @@ async function guardarProducto(evento) {
     }
 
     formNuevoProducto.reset();
+    productoEditandoId = null;
+    textoBoton = 'Guardar Producto';
 
     if (precioOriginalOmitido) {
       mostrarMensaje(
@@ -312,6 +347,39 @@ async function guardarProducto(evento) {
       botonGuardar.textContent = textoBoton;
     }
   }
+}
+
+/**
+ * Carga los datos de un producto en el formulario para editarlo.
+ * Guarda el ID en curso para que el submit haga un PATCH en lugar de un POST.
+ */
+function editarProducto(evento) {
+  const boton = evento.target.closest('.btn-warning[data-editar]');
+
+  if (!boton) return;
+
+  const id = boton.dataset.editar;
+  const producto = productosPorId.get(id);
+
+  if (!id || !producto) return;
+
+  productoEditandoId = id;
+
+  document.getElementById('producto-nombre').value = producto.nombre || '';
+  document.getElementById('producto-categoria').value = producto.categoria || '';
+  document.getElementById('producto-precio').value = producto.precio || '';
+  document.getElementById('producto-precio-original').value =
+    producto.precioOriginal || '';
+  document.getElementById('producto-imagen').value = producto.imagen || '';
+  document.getElementById('producto-descripcion').value =
+    producto.descripcion || '';
+  document.getElementById('producto-oferta').checked = Boolean(producto.oferta);
+
+  if (botonGuardar) {
+    botonGuardar.textContent = 'Actualizar Producto';
+  }
+
+  formNuevoProducto.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 /**
@@ -378,6 +446,7 @@ if (formNuevoProducto) {
 
 if (adminTbody) {
   adminTbody.addEventListener('click', eliminarProducto);
+  adminTbody.addEventListener('click', editarProducto);
 }
 
 document.addEventListener('DOMContentLoaded', listarProductosAdmin);

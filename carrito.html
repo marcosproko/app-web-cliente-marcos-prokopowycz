@@ -67,6 +67,41 @@
           </a>
         </div>
 
+        <!-- Formulario de checkout: simula que el pedido viaja a un servidor real -->
+        <form action="https://formspree.io/f/tucodigo" method="POST" class="form-checkout">
+          <div class="campo-checkout">
+            <label for="checkout-nombre">Nombre completo</label>
+            <input
+              type="text"
+              id="checkout-nombre"
+              name="nombre"
+              placeholder="Ej: Marcos Prokopowycz"
+              required
+            />
+          </div>
+          <div class="campo-checkout">
+            <label for="checkout-email">Correo electrónico</label>
+            <input
+              type="email"
+              id="checkout-email"
+              name="email"
+              placeholder="usuario@correo.com"
+              required
+            />
+          </div>
+          <div class="campo-checkout">
+            <label for="checkout-direccion">Dirección de envío</label>
+            <input
+              type="text"
+              id="checkout-direccion"
+              name="direccion"
+              placeholder="Av. Corrientes 1234"
+              required
+            />
+          </div>
+          <button type="submit" class="btn-comprar">Enviar pedido</button>
+        </form>
+
         <div class="carrito-acciones" id="carrito-acciones" hidden>
           <button type="button" class="btn-vaciar" id="btn-vaciar-carrito">
             Vaciar carrito

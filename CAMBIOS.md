@@ -568,6 +568,46 @@ Se restituyeron en el `<head>` de `index.html`, `catalogo.html`, `detalle-produc
 
 La descripción es idéntica en las seis vistas para que el resultado en buscadores sea consistente y el favicon es un SVG embebido con el emoji ⚡ en `data:` URI, así que no depende de un archivo externo ni de una ruta que pueda romperse. En `detalle-producto.html` el `<title>` quedó genérico ("Detalle de producto | WOL Hardware") porque el nombre real lo escribe `js/detalle.js` después de la consulta.
 
+## 14. Edición de productos (PATCH), ordenamiento por precio (.sort) y formularios realistas (POST)
+
+### 14.1. Edición de productos con el método `PATCH` en el backoffice (`admin.html` y `js/admin.js`)
+
+En la tabla de productos de `admin.html` cada fila ahora tiene, junto al botón **Eliminar** (`.btn-danger`), un botón **Editar** (`.btn-warning`) con el atributo `data-editar="<id>"`.
+
+Al hacer clic en **Editar**, `js/admin.js`:
+
+1. Lee el `id` del botón y busca el producto completo en un mapa (`productosPorId`) que se popula al listar los productos desde Supabase.
+2. Pobla el formulario de alta (`#form-nuevo-producto`) con los valores del producto: nombre, categoría, precio, precio original, imagen, descripción y el switch de oferta.
+3. Guarda el `id` en una variable (`productoEditandoId`) para saber que estamos en modo edición y cambia el texto del botón de submit a "Actualizar Producto".
+
+El manejador del `submit` del formulario se modificó para distinguir dos caminos:
+
+- **Si `productoEditandoId` tiene un valor**: hace un `fetch` con `method: 'PATCH'` a `${SUPABASE_URL}/rest/v1/Productos?id=eq.${id}`, enviando el cuerpo en JSON con las cabeceras `apikey`, `Authorization: Bearer <anon>` y `Content-Type: application/json`. El filtro `?id=eq.<id>` es la sintaxis de PostgREST para actualizar solo el registro que coincide con ese identificador.
+- **Si no tiene ID**: mantiene el `POST` normal a `${SUPABASE_URL}/rest/v1/Productos` para crear un producto nuevo.
+
+Tras el éxito de cualquiera de las dos operaciones, se resetea el formulario, se limpia `productoEditandoId`, se vuelve al texto "Guardar Producto", se muestra un mensaje de estado y se vuelve a llamar a `listarProductosAdmin()` para refrescar la tabla con el producto actualizado.
+
+### 14.2. Ordenamiento por precio con `.sort()` en el catálogo (`catalogo.html` y `js/catalogo.js`)
+
+En `catalogo.html`, dentro del bloque de filtros, se agregó un `<select id="orden-precio">` con tres opciones:
+
+- `relevancia`
+- `menor-mayor`
+- `mayor-menor`
+
+En `js/catalogo.js` se agregó un listener de evento `change` sobre ese select. Según la opción elegida, se usa el método de array `.sort()` directamente sobre el array de productos en memoria (`productos`) para reordenarlos por la propiedad `precio`:
+
+- `menor-mayor`: `productos.sort((a, b) => a.precio - b.precio)`.
+- `mayor-menor`: `productos.sort((a, b) => b.precio - a.precio)`.
+- `relevancia`: se restaura el orden original por `id` ascendente (el mismo en que llegan de Supabase).
+
+Después del `.sort()` se vuelve a llamar a `aplicarFiltro(categoriaActiva)`, que filtra y renderiza la grilla, por lo que los productos se muestran reordenados respetando la categoría seleccionada.
+
+### 14.3. Formularios realistas con `action` y `POST` (`contact.html` y `carrito.html`)
+
+- **`contact.html`**: el `<form>` de contacto ahora apunta a un servicio de recolección real con `action="https://formspree.io/f/tucodigo" method="POST"`. Se eliminó el `e.preventDefault()` del manejador de `submit` para que el navegador envíe realmente el formulario en lugar de solo simularlo localmente.
+- **`carrito.html`**: antes del botón "Finalizar compra" se agregó un pequeño formulario de Checkout con los campos Nombre, Email y Dirección, también conectado a `action="https://formspree.io/f/tucodigo" method="POST"`, para simular que el pedido viaja a un servidor al finalizar la compra.
+
 ### 13.6. Mensaje honesto en el formulario de contacto
 
 El submit de `contact.html` sigue siendo una simulación local: no hay backend de correo. Por eso el bloque `#mensaje-exito` (que conserva `role="status"`, `aria-live="polite"` y `aria-atomic="true"`) ahora dice:
@@ -575,4 +615,68 @@ El submit de `contact.html` sigue siendo una simulación local: no hay backend d
 > ¡Mensaje recibido! (Simulación de envío en entorno de demostración)
 
 El texto está tanto en el HTML como en el manejador de `submit`, que lo asigna con `mensajeExito.textContent` antes de mostrarlo, para que no dependa de un texto previo en el marcado. De esta forma la interfaz no promete un envío que en realidad no ocurre.
+
+## 15. Rediseño completo del catálogo: arquitectura, `.filter()` y `.sort()`
+
+### 15.1. Nueva estructura de `catalogo.html`
+
+El catálogo se reorganizó en un layout de dos columnas con CSS Grid:
+
+- **Columna izquierda (`<aside class="panel-filtros">`)**: contiene el buscador por nombre con icono de lupa, las categorías mediante checkboxes (Placas de Video, Procesadores, Memorias RAM, Refrigeración, Gabinetes, Monitores y Periféricos) y el `<select id="orden-precio">` con las opciones "Relevancia", "Menor a Mayor Precio" y "Mayor a Menor Precio". Incluye además un botón "Limpiar filtros".
+- **Columna derecha (`<div class="grid-inventario">`)**: es la grilla donde `js/catalogo.js` dibuja las tarjetas `.card-compacta`. En pantallas grandes se fuerzan 4 columnas; en tablets pasan a 2 y en móvil a 1.
+
+El `<header>` conserva el logo, la navegación principal y suma un buscador general (`action="catalogo.html"` con `method="get"`). Al enviarlo, la página se recarga con `?q=...` y `js/catalogo.js` lee ese parámetro para precargar el filtro de nombre.
+
+### 15.2. Origen de los datos
+
+`js/catalogo.js` intenta primero la API REST de Supabase (`/rest/v1/Productos?select=*&order=id.asc`). Si la petición falla o la base devuelve una lista vacía, se usa `PRODUCTOS_RESPALDO`, un array local con 17 productos variados de hardware (placas de video, procesadores, memorias RAM, refrigeración, gabinetes, monitores y periféricos) que garantiza contenido para probar la interfaz.
+
+### 15.3. Renderizado con `renderizarCatalogo(productos)`
+
+La función `renderizarCatalogo(productos)` limpia la grilla y recorre la lista recibida creando una tarjeta `.card-compacta` por producto con `document.createElement` y un `DocumentFragment`. Cada tarjeta muestra imagen, categoría, nombre, descripción, precio formateado en pesos, precio original tachado cuando corresponde y los botones "Detalle" y "Agregar". Si la lista está vacía, inserta el bloque `.sin-resultados` con un mensaje amigable y un botón para limpiar los filtros.
+
+### 15.4. Filtrado combinado con `.filter()`
+
+Cada interacción dispara `actualizarCatalogo()`, que llama a `obtenerProductosFiltrados()`. Ahí se aplica `.filter()` sobre `productosBase` combinando dos condiciones:
+
+```js
+const resultado = productosBase.filter((producto) => {
+  const coincideNombre =
+    termino === '' ||
+    String(producto.nombre || '').toLowerCase().includes(termino);
+
+  const coincideCategoria =
+    categoriasSeleccionadas.size === 0 ||
+    categoriasSeleccionadas.has(normalizarCategoria(producto.categoria));
+
+  return coincideNombre && coincideCategoria;
+});
+```
+
+- El evento `input` del buscador actualiza `terminoBusqueda` y vuelve a filtrar en tiempo real.
+- El evento `change` de los checkboxes reconstruye el `Set` de categorías tildadas. Si no hay ninguna tildada, se muestran todas.
+- `normalizarCategoria()` unifica alias de la base (por ejemplo "Coolers" → "Refrigeración") con los valores de los checkboxes.
+
+### 15.5. Ordenamiento con `.sort()`
+
+Sobre el array que devuelve `.filter()` se aplica `.sort()` según el valor del select:
+
+```js
+if (ordenActual === 'menor-mayor') {
+  resultado.sort((a, b) => Number(a.precio) - Number(b.precio));
+} else if (ordenActual === 'mayor-menor') {
+  resultado.sort((a, b) => Number(b.precio) - Number(a.precio));
+}
+```
+
+Como `.filter()` siempre devuelve un array nuevo, el `.sort()` no altera el orden original de `productosBase`: "Relevancia" conserva el orden de llegada. Después de ordenar, se llama a `renderizarCatalogo(resultado)`, de modo que la grilla refleja la búsqueda, las categorías y el orden elegido al mismo tiempo.
+
+### 15.6. Estilos y responsive
+
+Al final de `style.css` se agregó un bloque para el catálogo:
+
+- `.panel-filtros` usa `background: var(--color-tarjeta)`, borde `var(--color-tarjeta-borde)`, `border-radius: var(--radio-borde)` y `box-shadow: var(--sombra-card)`.
+- Inputs y selects usan fondo oscuro y foco cian (`--color-primario`) con `box-shadow`.
+- Los checkboxes son personalizados con `appearance: none` y se pintan de cian al tildarse.
+- En pantallas de hasta 900 px el layout pasa a una sola columna y el panel de filtros queda arriba de la grilla; a 560 px la grilla queda en una sola tarjeta por fila.
 

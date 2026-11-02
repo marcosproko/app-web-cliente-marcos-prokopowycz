@@ -1917,6 +1917,39 @@ footer {
   transform: none;
 }
 
+.btn-warning {
+  background-color: #f59e0b;
+  border: none;
+  border-radius: 6px;
+  color: #ffffff;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.55rem 0.95rem;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-warning:hover {
+  background-color: #d97706;
+  transform: translateY(-1px);
+}
+
+.btn-warning:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+.btn-warning:disabled {
+  background-color: #78350f;
+  cursor: not-allowed;
+  opacity: 0.7;
+  transform: none;
+}
+
 .admin-fila-vacia td {
   color: var(--color-muted);
   padding: 2rem 1rem;
@@ -1948,5 +1981,284 @@ footer {
 
   .admin-encabezado h1 {
     font-size: 1.55rem;
+  }
+}
+
+/* ============================================================
+   CATÁLOGO REDISEÑADO (catalogo.html)
+   Layout de dos columnas: panel de filtros + grilla de productos
+   ============================================================ */
+
+.catalogo-layout {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 2rem;
+  align-items: start;
+}
+
+/* Buscador general dentro del header del catálogo */
+.header-centrado .search-catalogo {
+  margin: 0.25rem auto 0;
+  width: 100%;
+  max-width: 520px;
+}
+
+.header-centrado .search-catalogo input {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ------------------------- Panel de filtros ------------------------- */
+
+.panel-filtros {
+  position: sticky;
+  top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: var(--color-tarjeta);
+  border: 1px solid var(--color-tarjeta-borde);
+  border-radius: var(--radio-borde);
+  box-shadow: var(--sombra-card);
+}
+
+.panel-filtros-titulo {
+  font-size: 1.05rem;
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--color-primario);
+}
+
+.filtro-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.filtro-etiqueta {
+  padding: 0;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--color-texto);
+}
+
+/* Input de búsqueda con icono lupa */
+.buscador-filtro {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.buscador-icono {
+  position: absolute;
+  left: 0.75rem;
+  display: inline-flex;
+  color: var(--color-muted);
+  pointer-events: none;
+}
+
+.buscador-icono svg {
+  width: 18px;
+  height: 18px;
+}
+
+.buscador-filtro input {
+  width: 100%;
+  padding: 0.65rem 0.9rem 0.65rem 2.5rem;
+  background-color: #0f1015;
+  border: 1px solid var(--color-tarjeta-borde);
+  border-radius: 8px;
+  color: var(--color-texto);
+  font-family: inherit;
+  font-size: 0.9rem;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.buscador-filtro input::placeholder {
+  color: var(--color-muted);
+}
+
+.buscador-filtro input:focus {
+  border-color: var(--color-primario);
+  box-shadow: 0 0 0 3px rgba(0, 235, 199, 0.18);
+}
+
+/* Checkboxes de categoría */
+.lista-categorias {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.opcion-categoria {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem 0.55rem;
+  border-radius: 8px;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.opcion-categoria:hover {
+  background-color: rgba(0, 235, 199, 0.08);
+  color: var(--color-texto);
+}
+
+.opcion-categoria input[type="checkbox"] {
+  position: relative;
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: #0f1015;
+  border: 2px solid var(--color-tarjeta-borde);
+  border-radius: 5px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.opcion-categoria input[type="checkbox"]:checked {
+  background-color: var(--color-primario);
+  border-color: var(--color-primario);
+}
+
+.opcion-categoria input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  top: 1px;
+  left: 5px;
+  width: 4px;
+  height: 9px;
+  border: solid #0a0a0c;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.opcion-categoria input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--color-primario);
+  outline-offset: 2px;
+}
+
+/* Select de ordenamiento */
+.select-filtro {
+  width: 100%;
+  padding: 0.65rem 0.9rem;
+  background-color: #0f1015;
+  border: 1px solid var(--color-tarjeta-borde);
+  border-radius: 8px;
+  color: var(--color-texto);
+  font-family: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.select-filtro:focus {
+  border-color: var(--color-primario);
+  box-shadow: 0 0 0 3px rgba(0, 235, 199, 0.18);
+}
+
+/* Botón para limpiar filtros */
+.btn-limpiar-filtros {
+  padding: 0.7rem 1rem;
+  background-color: transparent;
+  border: 1px solid var(--color-primario);
+  border-radius: 8px;
+  color: var(--color-primario);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.btn-limpiar-filtros:hover {
+  background-color: var(--color-primario);
+  color: #0a0a0c;
+}
+
+.btn-limpiar-filtros:focus-visible {
+  outline: 2px solid var(--color-primario);
+  outline-offset: 2px;
+}
+
+/* ----------------------- Columna de resultados ----------------------- */
+
+.catalogo-resultados {
+  min-width: 0;
+}
+
+.catalogo-encabezado {
+  margin-bottom: 1rem;
+}
+
+/* La grilla vive en una columna más angosta: permitimos 4 por fila */
+.catalogo-layout .grid-inventario {
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  max-width: none;
+  margin: 0;
+}
+
+.sin-resultados-icono {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.sin-resultados .sin-resultados-ayuda {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+/* ------------------------- Responsive ------------------------- */
+
+@media (min-width: 1200px) {
+  .catalogo-layout .grid-inventario {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .catalogo-layout {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .panel-filtros {
+    position: static;
+  }
+
+  .catalogo-layout .grid-inventario {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .catalogo-layout .grid-inventario {
+    grid-template-columns: 1fr;
   }
 }
