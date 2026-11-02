@@ -64,3 +64,6 @@
 
 ## 25. Corrección en Ficha de Detalle Dinámica y Restauración de Metadatos
 - Predicción: Espero restaurar los enlaces dinámicos en las tarjetas de inicio (js/app.js) y catálogo (js/catalogo.js) para que viajen con el parámetro ?id=${producto.id}. En detalle-producto.html, removeré la RTX 4070 estática de respaldo reemplazándola por contenedores vacíos con estados de carga/error dinámicos gestionados por js/detalle.js. Asimismo, reincorporaré en el head de los 6 HTML la meta descripción y el favicon SVG, y actualizaré el mensaje de contacto en contact.html con una aclaración honesta de simulación.
+
+## 26. Edición en Admin, Filtros de Precio y Checkout Realista
+- Predicción: Espero implementar el método PATCH/PUT en js/admin.js para permitir la edición de productos existentes desde el formulario. En js/catalogo.js, agregaré un selector para ordenar el array de productos por precio usando .sort(). Finalmente, configuraré los formularios de contacto y checkout simulado con el servicio Formspree (action/POST) para lograr un envío de datos realista y redirección, cerrando los requisitos funcionales pendientes.
