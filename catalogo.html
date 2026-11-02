@@ -11,9 +11,10 @@
     <script src="js/catalogo.js" defer></script>
   </head>
   <body>
-    <!-- Header con enlace activo -->
+    <!-- Header con navegación principal y buscador general -->
     <header class="header-centrado">
       <a class="logo" href="index.html" aria-label="WOL Hardware - Inicio">WOL</a>
+
       <nav aria-label="Navegación principal">
         <ul class="nav-centrado">
           <li><a href="index.html">Inicio</a></li>
@@ -29,55 +30,129 @@
           <li><a href="contact.html">Contacto</a></li>
         </ul>
       </nav>
+
+      <form
+        role="search"
+        class="search-centrado search-catalogo"
+        action="catalogo.html"
+        method="get"
+      >
+        <label for="buscador-general" class="sr-only">Buscar producto</label>
+        <input
+          type="search"
+          id="buscador-general"
+          name="q"
+          placeholder="Búsqueda de productos..."
+          aria-label="Buscar producto"
+        />
+        <button type="submit">Buscar</button>
+      </form>
     </header>
 
-    <main>
-      <section
-        aria-label="Explorador de inventario"
-        class="catalogo-header-bloque"
-      >
-        <div class="seccion-header">
-          <h1>📦 Inventario General</h1>
+    <main class="catalogo-layout">
+      <!-- Columna izquierda: panel de filtros -->
+      <aside class="panel-filtros" aria-labelledby="filtros-titulo">
+        <h2 id="filtros-titulo" class="panel-filtros-titulo">Filtros</h2>
+
+        <div class="filtro-grupo">
+          <label class="filtro-etiqueta" for="buscar-nombre">
+            Buscar por nombre
+          </label>
+          <div class="buscador-filtro">
+            <span class="buscador-icono" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="11" cy="11" r="7"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </span>
+            <input
+              type="search"
+              id="buscar-nombre"
+              placeholder="Buscar por nombre..."
+              autocomplete="off"
+              aria-label="Buscar producto por nombre"
+            />
+          </div>
+        </div>
+
+        <fieldset class="filtro-grupo filtro-categorias">
+          <legend class="filtro-etiqueta">Categorías</legend>
+          <div class="lista-categorias">
+            <label class="opcion-categoria">
+              <input type="checkbox" name="categoria" value="Placas de Video" />
+              <span>Placas de Video</span>
+            </label>
+            <label class="opcion-categoria">
+              <input type="checkbox" name="categoria" value="Procesadores" />
+              <span>Procesadores</span>
+            </label>
+            <label class="opcion-categoria">
+              <input type="checkbox" name="categoria" value="Memorias RAM" />
+              <span>Memorias RAM</span>
+            </label>
+            <label class="opcion-categoria">
+              <input type="checkbox" name="categoria" value="Refrigeración" />
+              <span>Refrigeración</span>
+            </label>
+            <label class="opcion-categoria">
+              <input type="checkbox" name="categoria" value="Gabinetes" />
+              <span>Gabinetes</span>
+            </label>
+            <label class="opcion-categoria">
+              <input type="checkbox" name="categoria" value="Monitores" />
+              <span>Monitores</span>
+            </label>
+            <label class="opcion-categoria">
+              <input type="checkbox" name="categoria" value="Periféricos" />
+              <span>Periféricos</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <div class="filtro-grupo">
+          <label class="filtro-etiqueta" for="orden-precio">Ordenar por</label>
+          <select id="orden-precio" class="select-filtro">
+            <option value="relevancia">Relevancia</option>
+            <option value="menor-mayor">Menor a Mayor Precio</option>
+            <option value="mayor-menor">Mayor a Menor Precio</option>
+          </select>
+        </div>
+
+        <button
+          type="button"
+          id="btn-limpiar-filtros"
+          class="btn-limpiar-filtros"
+        >
+          Limpiar filtros
+        </button>
+      </aside>
+
+      <!-- Columna derecha: grilla de productos -->
+      <section class="catalogo-resultados" aria-labelledby="catalogo-titulo">
+        <div class="seccion-header catalogo-encabezado">
+          <h1 id="catalogo-titulo">📦 Inventario General</h1>
           <p>
             Listado completo de componentes y periféricos en stock con garantía
             oficial.
           </p>
         </div>
 
-        <!-- Filtros por categoría: los maneja js/catalogo.js -->
-        <nav class="filtros-catalogo" aria-label="Filtro por categoría de hardware">
-          <button type="button" class="btn-filtro activo" data-categoria="" aria-pressed="true">
-            Todos los productos
-          </button>
-          <button type="button" class="btn-filtro" data-categoria="Placas de Video" aria-pressed="false">
-            Placas de Video
-          </button>
-          <button type="button" class="btn-filtro" data-categoria="Procesadores" aria-pressed="false">
-            Procesadores
-          </button>
-          <button type="button" class="btn-filtro" data-categoria="Memorias RAM" aria-pressed="false">
-            Memorias RAM
-          </button>
-          <button type="button" class="btn-filtro" data-categoria="Gabinetes" aria-pressed="false">
-            Gabinetes
-          </button>
-          <button type="button" class="btn-filtro" data-categoria="Teclados y Mouse" aria-pressed="false">
-            Periféricos
-          </button>
-          <button type="button" class="btn-filtro" data-categoria="Coolers" aria-pressed="false">
-            Refrigeración
-          </button>
-          <button type="button" class="btn-filtro" data-categoria="Monitores" aria-pressed="false">
-            Monitores
-          </button>
-        </nav>
-      </section>
-
-      <!-- Grilla de inventario: se completa dinámicamente desde Supabase -->
-      <section aria-label="Productos en stock">
-        <p id="catalogo-estado" class="estado-catalogo" role="status" aria-live="polite">
+        <p
+          id="catalogo-estado"
+          class="estado-catalogo"
+          role="status"
+          aria-live="polite"
+        >
           Cargando productos...
         </p>
+
         <div class="grid-inventario" id="grid-inventario"></div>
       </section>
     </main>
