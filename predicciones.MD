@@ -67,3 +67,6 @@
 
 ## 26. Edición en Admin, Filtros de Precio y Checkout Realista
 - Predicción: Espero implementar el método PATCH/PUT en js/admin.js para permitir la edición de productos existentes desde el formulario. En js/catalogo.js, agregaré un selector para ordenar el array de productos por precio usando .sort(). Finalmente, configuraré los formularios de contacto y checkout simulado con el servicio Formspree (action/POST) para lograr un envío de datos realista y redirección, cerrando los requisitos funcionales pendientes.
+
+## 27. 
+Espero conectar la tienda a una base de datos PostgreSQL en la nube (Supabase) configurando OpenCode mediante MCP. La IA deberá leer la estructura de mi proyecto en vivo para generar la llamada asíncrona (`async/await`) con Fetch API, consultando los registros remotos y poblando la grilla de productos en el DOM dinámicamente.
